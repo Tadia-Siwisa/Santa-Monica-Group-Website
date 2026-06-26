@@ -179,8 +179,12 @@
 
         .ecosystem-canvas {
             position: relative;
-            width: 900px;
-            height: 700px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .ecosystem-center {
@@ -202,15 +206,15 @@
         }
 
         .ecosystem-center svg {
-            width: 56px;
-            height: 56px;
+            width: 80px;
+            height: 80px;
         }
 
         .ecosystem-center-text {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 400;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
             color: var(--white);
         }
@@ -266,16 +270,16 @@
         }
 
         .node-logo {
-            width: 52px;
-            height: 52px;
+            width: 80px;
+            height: 80px;
             background: var(--charcoal-light);
             border: 1px solid rgba(201, 168, 76, 0.15);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
+            font-size: 1.6rem;
             font-weight: 600;
             color: var(--warm-gold);
             transition: all 0.4s ease;
@@ -283,7 +287,7 @@
 
         .node-name {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: 400;
             color: var(--white);
             letter-spacing: 0.05em;
@@ -315,9 +319,9 @@
         .connection-path {
             fill: none;
             stroke: rgba(201, 168, 76, 0.25);
-            stroke-width: 1;
-            stroke-dasharray: 400;
-            stroke-dashoffset: 400;
+            stroke-width: 1.5;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
             opacity: 0;
         }
 
@@ -326,7 +330,7 @@
         }
 
         @keyframes drawPath {
-            0% { opacity: 0; stroke-dashoffset: 400; }
+            0% { opacity: 0; stroke-dashoffset: 1000; }
             20% { opacity: 1; }
             100% { opacity: 0.6; stroke-dashoffset: 0; }
         }
@@ -437,13 +441,13 @@
 
         /* ===== HERO ===== */
         .hero {
-            min-height: 100vh;
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 120px 48px 80px;
+            padding: 140px 48px 40px;
             position: relative;
         }
 
@@ -533,7 +537,7 @@
 
         .ecosystem-header {
             text-align: center;
-            padding: 80px 0 60px;
+            padding: 40px 0 60px;
             border-top: 1px solid var(--border-subtle);
         }
 
@@ -566,53 +570,16 @@
         /* ===== UNIFIED ECOSYSTEM GRID ===== */
         .ecosystem-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 1px;
             background: var(--border-subtle);
             border: 1px solid var(--border-subtle);
         }
 
-        .ecosystem-column {
-            background: var(--charcoal-mid);
-            padding: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .column-header {
-            padding: 28px 28px 20px;
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: baseline;
-            gap: 16px;
-        }
-
-        .column-header h3 {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 500;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: var(--warm-gold);
-        }
-
-        .column-header .column-line {
-            flex: 1;
-            height: 1px;
-            background: var(--border-subtle);
-        }
-
-        .column-header .column-count {
-            font-size: 0.6rem;
-            font-weight: 400;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--slate);
-        }
-
         /* ===== COMPANY CARD ===== */
         .company-card {
-            padding: 24px 28px;
+            background: var(--charcoal-mid);
+            padding: 32px 36px;
             border-bottom: 1px solid var(--border-subtle);
             cursor: pointer;
             transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -641,31 +608,31 @@
         }
 
         .company-card:hover {
-            background: linear-gradient(90deg, transparent 0%, rgba(201, 168, 76, 0.03) 50%, transparent 100%);
+            background: linear-gradient(90deg, var(--charcoal-mid) 0%, rgba(201, 168, 76, 0.03) 50%, var(--charcoal-mid) 100%);
         }
 
         .company-card.expanded {
             background: var(--charcoal-light);
-            padding: 28px 28px 32px;
+            padding: 36px 36px 42px;
         }
 
         .company-top {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
         .company-logo {
-            width: 44px;
-            height: 44px;
+            width: 56px;
+            height: 56px;
             background: var(--charcoal-light);
             border: 1px solid rgba(201, 168, 76, 0.12);
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--warm-gold);
             flex-shrink: 0;
@@ -1018,10 +985,7 @@
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1100px) {
             .ecosystem-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .ecosystem-canvas {
-                transform: scale(0.7);
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             }
         }
 
@@ -1033,7 +997,7 @@
                 display: none;
             }
             .hero {
-                padding: 100px 24px 60px;
+                padding: 100px 24px 40px;
             }
             .ecosystem {
                 padding: 0 24px 80px;
@@ -1042,7 +1006,7 @@
                 grid-template-columns: 1fr;
             }
             .company-card {
-                padding: 20px 24px;
+                padding: 24px 28px;
             }
             .footer-content {
                 flex-direction: column;
@@ -1056,9 +1020,6 @@
                 flex-direction: column;
                 gap: 14px;
                 text-align: center;
-            }
-            .ecosystem-canvas {
-                transform: scale(0.5);
             }
         }
 
@@ -1105,7 +1066,7 @@
         <!-- Stage 3: Ecosystem Network -->
         <div class="stage-ecosystem" id="stageEcosystem">
             <div class="ecosystem-canvas" id="ecosystemCanvas">
-                <svg class="connections-svg" id="connectionsSvg" viewBox="0 0 900 700">
+                <svg class="connections-svg" id="connectionsSvg">
                     <!-- Lines will be drawn dynamically -->
                 </svg>
 
@@ -1119,34 +1080,29 @@
                 </div>
 
                 <!-- Company nodes positioned around the centre -->
-                <div class="company-node" id="nodeRemgro" style="left: 120px; top: 180px;">
+                <div class="company-node" id="nodeRemgro">
                     <div class="node-logo">R</div>
                     <div class="node-name">Remgro</div>
-                    <div class="node-sector">Mining & Resources</div>
                 </div>
 
-                <div class="company-node" id="nodeMasimong" style="left: 80px; top: 380px;">
+                <div class="company-node" id="nodeMasimong">
                     <div class="node-logo">M</div>
                     <div class="node-name">Masimong Group</div>
-                    <div class="node-sector">Mining & Resources</div>
                 </div>
 
-                <div class="company-node" id="nodePSG" style="left: 420px; top: 80px;">
+                <div class="company-node" id="nodePSG">
                     <div class="node-logo">P</div>
                     <div class="node-name">PSG Group</div>
-                    <div class="node-sector">Financial Services</div>
                 </div>
 
-                <div class="company-node" id="nodePhembani" style="right: 120px; top: 200px;">
+                <div class="company-node" id="nodePhembani">
                     <div class="node-logo">Ph</div>
                     <div class="node-name">Phembani Group</div>
-                    <div class="node-sector">Energy & Infrastructure</div>
                 </div>
 
-                <div class="company-node" id="nodeZungu" style="right: 80px; top: 400px;">
+                <div class="company-node" id="nodeZungu">
                     <div class="node-logo">Z</div>
-                    <div class="node-name">Zungu Investment</div>
-                    <div class="node-sector">Financial Services</div>
+                    <div class="node-name">Zungu Investments</div>
                 </div>
             </div>
         </div>
@@ -1189,200 +1145,174 @@
             <div class="ecosystem-header reveal">
                 <span class="section-label">Our Investment Ecosystem</span>
                 <h2>Strategic Holdings</h2>
-                <p>Five portfolio companies across core sectors, each selected for growth potential and alignment with Africa's development trajectory.</p>
+                <p>Five strategic holdings, each selected for growth potential and alignment with Africa's development trajectory.</p>
             </div>
 
             <div class="ecosystem-grid reveal">
-                <!-- Column 1: Mining & Resources -->
-                <div class="ecosystem-column">
-                    <div class="column-header">
-                        <h3>Mining & Resources</h3>
-                        <div class="column-line"></div>
-                        <span class="column-count">2 Holdings</span>
-                    </div>
-
-                    <div class="company-card" data-company="remgro">
-                        <div class="company-top">
-                            <div class="company-logo">R</div>
-                            <div class="company-name">Remgro Limited</div>
-                            <div class="expand-indicator">
-                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
-                            </div>
-                        </div>
-                        <div class="company-summary">
-                            Diversified South African investment holding company with interests in healthcare, financial services, consumer products, and industrial sectors. Listed on the JSE.
-                        </div>
-                        <div class="company-detail">
-                            <div class="company-detail-inner">
-                                <h4>Investment Thesis</h4>
-                                <p>Remgro is one of South Africa's premier investment holding companies, with a portfolio spanning healthcare (Mediclinic), financial services (FirstRand, RMB Holdings), consumer products, and industrial assets. Founded by Dr Anton Rupert in the 1940s, it delivers consistent dividend growth and capital appreciation through long-term strategic partnerships.</p>
-                                <div class="detail-tags">
-                                    <span class="detail-tag">JSE Listed</span>
-                                    <span class="detail-tag">Healthcare</span>
-                                    <span class="detail-tag">Banking</span>
-                                    <span class="detail-tag">Consumer</span>
-                                    <span class="detail-tag">Industrial</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="company-actions">
-                            <a href="#" class="discuss-btn">
-                                Discuss Investment
-                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M1 6h10M7 2l4 4-4 4"/>
-                                </svg>
-                            </a>
+                <!-- Portfolio Direct Holdings -->
+                <div class="company-card" data-company="remgro">
+                    <div class="company-top">
+                        <div class="company-logo">R</div>
+                        <div class="company-name">Remgro Limited</div>
+                        <div class="expand-indicator">
+                            <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
                         </div>
                     </div>
-
-                    <div class="company-card" data-company="masimong">
-                        <div class="company-top">
-                            <div class="company-logo">M</div>
-                            <div class="company-name">Masimong Group Holdings</div>
-                            <div class="expand-indicator">
-                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                    <div class="company-summary">
+                        Diversified investment holding company with a portfolio spanning healthcare, financial services, consumer products, and industrial assets.
+                    </div>
+                    <div class="company-detail">
+                        <div class="company-detail-inner">
+                            <h4>Investment Thesis</h4>
+                            <p>Remgro is one of South Africa's premier investment holding companies. Founded in the 1940s, it delivers consistent value through long-term strategic partnerships across healthcare, banking, and industrial sectors.</p>
+                            <div class="detail-tags">
+                                <span class="detail-tag">Healthcare</span>
+                                <span class="detail-tag">Financial Services</span>
+                                <span class="detail-tag">Consumer</span>
+                                <span class="detail-tag">Industrial</span>
+                                <span class="detail-tag">Infrastructure</span>
                             </div>
                         </div>
-                        <div class="company-summary">
-                            Majority black-owned investment company focused on mining, agriculture, financial services, and industrial sectors across South Africa.
-                        </div>
-                        <div class="company-detail">
-                            <div class="company-detail-inner">
-                                <h4>Investment Thesis</h4>
-                                <p>Masimong is a diversified majority black-owned and controlled investment company led by Mike Teke. Its portfolio includes key stakes in Seriti Resources (coal mining), agricultural assets, and industrial holdings. The company is committed to empowerment, growth, and value creation with a Level 2 BBBEE rating.</p>
-                                <div class="detail-tags">
-                                    <span class="detail-tag">Mining</span>
-                                    <span class="detail-tag">Agriculture</span>
-                                    <span class="detail-tag">BBBEE Level 2</span>
-                                    <span class="detail-tag">Seriti Resources</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="company-actions">
-                            <a href="#" class="discuss-btn">
-                                Discuss Investment
-                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M1 6h10M7 2l4 4-4 4"/>
-                                </svg>
-                            </a>
-                        </div>
+                    </div>
+                    <div class="company-actions">
+                        <a href="#" class="discuss-btn">
+                            Discuss Investment
+                            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M1 6h10M7 2l4 4-4 4"/>
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
-                <!-- Column 2: Financial Services -->
-                <div class="ecosystem-column">
-                    <div class="column-header">
-                        <h3>Financial Services</h3>
-                        <div class="column-line"></div>
-                        <span class="column-count">2 Holdings</span>
-                    </div>
-
-                    <div class="company-card" data-company="psg">
-                        <div class="company-top">
-                            <div class="company-logo">P</div>
-                            <div class="company-name">PSG Group</div>
-                            <div class="expand-indicator">
-                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
-                            </div>
-                        </div>
-                        <div class="company-summary">
-                            Leading South African investment holding company with interests in banking, education, and private equity across sub-Saharan Africa.
-                        </div>
-                        <div class="company-detail">
-                            <div class="company-detail-inner">
-                                <h4>Investment Thesis</h4>
-                                <p>PSG Group is a diversified investment holding company with significant interests in financial services, education, and private equity. Known for its entrepreneurial culture and value creation track record, PSG has built substantial shareholder value through strategic investments in high-growth African businesses.</p>
-                                <div class="detail-tags">
-                                    <span class="detail-tag">JSE Listed</span>
-                                    <span class="detail-tag">Banking</span>
-                                    <span class="detail-tag">Education</span>
-                                    <span class="detail-tag">Private Equity</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="company-actions">
-                            <a href="#" class="discuss-btn">
-                                Discuss Investment
-                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M1 6h10M7 2l4 4-4 4"/>
-                                </svg>
-                            </a>
+                <div class="company-card" data-company="masimong">
+                    <div class="company-top">
+                        <div class="company-logo">M</div>
+                        <div class="company-name">Masimong Group Holdings</div>
+                        <div class="expand-indicator">
+                            <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
                         </div>
                     </div>
-
-                    <div class="company-card" data-company="zungu">
-                        <div class="company-top">
-                            <div class="company-logo">Z</div>
-                            <div class="company-name">Zungu Investment</div>
-                            <div class="expand-indicator">
-                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                    <div class="company-summary">
+                        Diversified black-owned investment company with strategic interests in mining, agriculture, financial services, and industrial sectors.
+                    </div>
+                    <div class="company-detail">
+                        <div class="company-detail-inner">
+                            <h4>Investment Thesis</h4>
+                            <p>Masimong is committed to creating sustainable value and empowerment across critical sectors of the South African economy through disciplined investing in high-quality businesses.</p>
+                            <div class="detail-tags">
+                                <span class="detail-tag">Mining</span>
+                                <span class="detail-tag">Agriculture</span>
+                                <span class="detail-tag">Financial Services</span>
+                                <span class="detail-tag">Industrial</span>
                             </div>
                         </div>
-                        <div class="company-summary">
-                            Black-owned investment company with diversified interests in property, infrastructure, and industrial sectors across South Africa.
-                        </div>
-                        <div class="company-detail">
-                            <div class="company-detail-inner">
-                                <h4>Investment Thesis</h4>
-                                <p>Zungu Investment Company is a black-owned investment holding company with strategic interests in property development, infrastructure, and industrial sectors. The company focuses on creating sustainable value through long-term partnerships and transformative investments that align with South Africa's economic development goals.</p>
-                                <div class="detail-tags">
-                                    <span class="detail-tag">Property</span>
-                                    <span class="detail-tag">Infrastructure</span>
-                                    <span class="detail-tag">Industrial</span>
-                                    <span class="detail-tag">Transformation</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="company-actions">
-                            <a href="#" class="discuss-btn">
-                                Discuss Investment
-                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M1 6h10M7 2l4 4-4 4"/>
-                                </svg>
-                            </a>
-                        </div>
+                    </div>
+                    <div class="company-actions">
+                        <a href="#" class="discuss-btn">
+                            Discuss Investment
+                            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M1 6h10M7 2l4 4-4 4"/>
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
-                <!-- Column 3: Energy & Infrastructure -->
-                <div class="ecosystem-column">
-                    <div class="column-header">
-                        <h3>Energy & Infrastructure</h3>
-                        <div class="column-line"></div>
-                        <span class="column-count">1 Holding</span>
+                <div class="company-card" data-company="psg">
+                    <div class="company-top">
+                        <div class="company-logo">P</div>
+                        <div class="company-name">PSG Group</div>
+                        <div class="expand-indicator">
+                            <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                        </div>
                     </div>
+                    <div class="company-summary">
+                        Diversified investment holding company focused on high-growth businesses across energy, education, and financial services.
+                    </div>
+                    <div class="company-detail">
+                        <div class="company-detail-inner">
+                            <h4>Investment Thesis</h4>
+                            <p>PSG Group continues to operate as a leading unlisted investment holding company. It invests predominantly in South African businesses with high growth potential, aiming to build sustainable value alongside management.</p>
+                            <div class="detail-tags">
+                                <span class="detail-tag">Energy</span>
+                                <span class="detail-tag">Education</span>
+                                <span class="detail-tag">Financial Services</span>
+                                <span class="detail-tag">Private Equity</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="company-actions">
+                        <a href="#" class="discuss-btn">
+                            Discuss Investment
+                            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M1 6h10M7 2l4 4-4 4"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
 
-                    <div class="company-card" data-company="phembani">
-                        <div class="company-top">
-                            <div class="company-logo">Ph</div>
-                            <div class="company-name">Phembani Group</div>
-                            <div class="expand-indicator">
-                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                <div class="company-card" data-company="phembani">
+                    <div class="company-top">
+                        <div class="company-logo">Ph</div>
+                        <div class="company-name">Phembani Group</div>
+                        <div class="expand-indicator">
+                            <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="company-summary">
+                        Diversified industrial holding company with targeted interests in the energy, resources, and infrastructure-related sectors.
+                    </div>
+                    <div class="company-detail">
+                        <div class="company-detail-inner">
+                            <h4>Investment Thesis</h4>
+                            <p>Phembani is a leading Pan-African black-controlled company. It focuses on driving economic transformation and delivering strong returns through active involvement in its investee companies.</p>
+                            <div class="detail-tags">
+                                <span class="detail-tag">Energy</span>
+                                <span class="detail-tag">Resources</span>
+                                <span class="detail-tag">Infrastructure</span>
+                                <span class="detail-tag">Industrial Services</span>
                             </div>
                         </div>
-                        <div class="company-summary">
-                            South African investment firm focused on energy, resources, and infrastructure with a commitment to economic transformation and sustainable development.
+                    </div>
+                    <div class="company-actions">
+                        <a href="#" class="discuss-btn">
+                            Discuss Investment
+                            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M1 6h10M7 2l4 4-4 4"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="company-card" data-company="zungu">
+                    <div class="company-top">
+                        <div class="company-logo">Z</div>
+                        <div class="company-name">Zungu Investments</div>
+                        <div class="expand-indicator">
+                            <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
                         </div>
-                        <div class="company-detail">
-                            <div class="company-detail-inner">
-                                <h4>Investment Thesis</h4>
-                                <p>Phembani Group is a South African investment company with strategic interests in energy, resources, and infrastructure. Based in Sandton, Johannesburg, the firm is committed to driving economic transformation while delivering strong investment returns. Its focus on critical infrastructure aligns with Africa's development needs.</p>
-                                <div class="detail-tags">
-                                    <span class="detail-tag">Energy</span>
-                                    <span class="detail-tag">Resources</span>
-                                    <span class="detail-tag">Infrastructure</span>
-                                    <span class="detail-tag">Transformation</span>
-                                </div>
+                    </div>
+                    <div class="company-summary">
+                        Diversified private equity business and investment holding company with a proven track record across property, infrastructure, and industrial sectors.
+                    </div>
+                    <div class="company-detail">
+                        <div class="company-detail-inner">
+                            <h4>Investment Thesis</h4>
+                            <p>Zungu Investments (ZICO) is known for its disciplined, long-term investment approach and agility in decision-making. It acts as a catalyst for transformation and sustainable growth across Africa.</p>
+                            <div class="detail-tags">
+                                <span class="detail-tag">Property</span>
+                                <span class="detail-tag">Infrastructure</span>
+                                <span class="detail-tag">Industrial</span>
+                                <span class="detail-tag">Private Equity</span>
                             </div>
                         </div>
-                        <div class="company-actions">
-                            <a href="#" class="discuss-btn">
-                                Discuss Investment
-                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M1 6h10M7 2l4 4-4 4"/>
-                                </svg>
-                            </a>
-                        </div>
+                    </div>
+                    <div class="company-actions">
+                        <a href="#" class="discuss-btn">
+                            Discuss Investment
+                            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M1 6h10M7 2l4 4-4 4"/>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1431,9 +1361,9 @@
                     </div>
                     <div class="footer-col">
                         <h4>Portfolio</h4>
-                        <a href="#">Mining & Resources</a>
-                        <a href="#">Financial Services</a>
-                        <a href="#">Energy & Infrastructure</a>
+                        <a href="#">Strategic Holdings</a>
+                        <a href="#">Investment Thesis</a>
+                        <a href="#">Market Impact</a>
                     </div>
                     <div class="footer-col">
                         <h4>Contact</h4>
@@ -1465,42 +1395,89 @@
         const mainSite = document.getElementById('mainSite');
 
         const companies = [
-            { id: 'nodeRemgro', name: 'Remgro', x: 120, y: 180, delay: 0 },
-            { id: 'nodeMasimong', name: 'Masimong Group', x: 80, y: 380, delay: 1200 },
-            { id: 'nodePSG', name: 'PSG Group', x: 420, y: 80, delay: 2400 },
-            { id: 'nodePhembani', name: 'Phembani Group', x: 720, y: 200, delay: 3600 },
-            { id: 'nodeZungu', name: 'Zungu Investment', x: 760, y: 400, delay: 4800 }
+            { id: 'nodeRemgro', name: 'Remgro', angle: 210, delay: 0 },
+            { id: 'nodeMasimong', name: 'Masimong Group', angle: 150, delay: 800 },
+            { id: 'nodePSG', name: 'PSG Group', angle: 270, delay: 1600 },
+            { id: 'nodePhembani', name: 'Phembani Group', angle: 330, delay: 2400 },
+            { id: 'nodeZungu', name: 'Zungu Investments', angle: 30, delay: 3200 }
         ];
 
-        // Step 1: Logo + "Santa Monica Group" text appear together, hold for longer
+        function getPositions() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) * 0.38;
+
+            return { centerX, centerY, radius };
+        }
+
+        function updateLayout() {
+            const { centerX, centerY, radius } = getPositions();
+
+            companies.forEach(company => {
+                const node = document.getElementById(company.id);
+                if (!node) return;
+
+                const angleRad = (company.angle * Math.PI) / 180;
+                const x = centerX + radius * Math.cos(angleRad);
+                const y = centerY + radius * Math.sin(angleRad);
+
+                node.style.left = `${x}px`;
+                node.style.top = `${y}px`;
+                node.style.transform = 'translate(-50%, -50%)';
+
+                company.currentX = x;
+                company.currentY = y;
+            });
+        }
+
+        window.addEventListener('resize', updateLayout);
+        updateLayout();
+
+        // Step 1: Logo + "Santa Monica Group" text appear together
         setTimeout(() => {
             stageLogo.classList.add('active');
         }, 300);
 
-        // Step 2: Logo fades, mission appears (after 4.5s - held longer)
+        // Step 2: Logo fades, mission appears
         setTimeout(() => {
             stageLogo.classList.add('fade-out');
             stageMission.classList.add('active');
-        }, 4800);
+        }, 3000);
 
-        // Step 3: Mission fades, ecosystem appears (after 8s)
+        // Step 3: Mission fades, ecosystem appears
         setTimeout(() => {
             stageMission.classList.add('fade-out');
             stageEcosystem.classList.add('active');
-        }, 9000);
+            updateLayout();
+        }, 5500);
 
         // Step 4: Center logo appears
         setTimeout(() => {
             ecosystemCenter.classList.add('visible');
-        }, 10500);
+        }, 6500);
 
-        // Step 5: Draw connection lines and reveal companies one by one (slower)
+        // Step 5: Draw connection lines and reveal companies
         function drawConnection(company, centerX, centerY) {
-            const nodeX = company.x + 26;
-            const nodeY = company.y + 26;
+            const nodeX = company.currentX;
+            const nodeY = company.currentY;
+
+            // Calculate intersection points with node boundaries
+            const dx = nodeX - centerX;
+            const dy = nodeY - centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            const startOffset = 42; // Center logo is 80px, plus slight gap
+            const endOffset = 58;   // Company logo is 80px, plus gap and padding for label
+
+            const startX = centerX + (dx / distance) * startOffset;
+            const startY = centerY + (dy / distance) * startOffset;
+            const endX = nodeX - (dx / distance) * endOffset;
+            const endY = nodeY - (dy / distance) * endOffset;
 
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            const d = `M${centerX},${centerY} L${nodeX},${nodeY}`;
+            const d = `M${startX},${startY} L${endX},${endY}`;
             path.setAttribute('d', d);
             path.setAttribute('class', 'connection-path');
             connectionsSvg.appendChild(path);
@@ -1510,25 +1487,23 @@
             }, 100);
         }
 
-        const centerX = 450;
-        const centerY = 350;
-
         companies.forEach((company, index) => {
             setTimeout(() => {
+                const { centerX, centerY } = getPositions();
                 drawConnection(company, centerX, centerY);
 
                 setTimeout(() => {
                     const node = document.getElementById(company.id);
                     if (node) node.classList.add('visible');
-                }, 1200);
-            }, 11500 + company.delay);
+                }, 800);
+            }, 7500 + company.delay);
         });
 
-        // Step 7: Pause, then transition to homepage (after all companies visible + longer pause)
+        // Step 7: Pause, then transition to homepage
         setTimeout(() => {
             openingSequence.classList.add('complete');
             mainSite.classList.add('visible');
-        }, 22000);
+        }, 12500);
 
         // ===== NAVBAR SCROLL =====
         const navbar = document.getElementById('navbar');
