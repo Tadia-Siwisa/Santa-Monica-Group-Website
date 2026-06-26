@@ -44,7 +44,7 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: 40px 60px;
+            padding: 30px 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -52,6 +52,7 @@
             transform: translateY(-20px);
             transition: var(--transition-slow);
             pointer-events: none;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
         }
 
         nav.visible {
@@ -61,18 +62,19 @@
         }
 
         .nav-logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 400;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo-img {
+            height: 35px;
+            width: auto;
+            filter: brightness(0) invert(1);
         }
 
         .nav-links {
             display: flex;
-            gap: 50px;
+            gap: 60px;
             list-style: none;
         }
 
@@ -81,7 +83,7 @@
             color: var(--white-dim);
             font-size: 0.7rem;
             font-weight: 500;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.3em;
             text-transform: uppercase;
             transition: color 0.4s ease;
         }
@@ -112,11 +114,12 @@
             z-index: 10;
         }
 
-        .sm-emblem-svg {
-            width: 70px;
-            height: 70px;
+        .sm-emblem-img {
+            width: 80px;
+            height: 80px;
             opacity: 0;
             transform: scale(0.85);
+            filter: brightness(0) invert(1);
         }
 
         .company-name {
@@ -145,8 +148,8 @@
             fill: none;
             stroke: var(--gold);
             stroke-width: 1;
-            stroke-dasharray: 1885; /* 2 * PI * 300 */
-            stroke-dashoffset: 1885;
+            stroke-dasharray: 1634; /* 2 * PI * 260 */
+            stroke-dashoffset: 1634;
             opacity: 0.4;
         }
 
@@ -178,7 +181,7 @@
 
         .node-text {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 24px;
+            font-size: 42px;
             font-weight: 300;
             fill: var(--white);
             text-anchor: middle;
@@ -190,12 +193,12 @@
         .energy-highlight {
             fill: none;
             stroke: var(--gold);
-            stroke-width: 3;
+            stroke-width: 2;
             stroke-linecap: round;
-            stroke-dasharray: 60, 1825;
-            stroke-dashoffset: 1885;
+            stroke-dasharray: 100, 1534;
+            stroke-dashoffset: 1634;
             opacity: 0;
-            filter: blur(1px);
+            filter: blur(2px);
         }
 
         /* ===== CONTENT SECTION ===== */
@@ -211,7 +214,7 @@
         }
 
         .portfolio {
-            padding: 160px 60px;
+            padding: 220px 60px 160px;
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -247,7 +250,7 @@
         .portfolio-card {
             background: var(--charcoal);
             border: 1px solid var(--gold-faint);
-            border-radius: 4px;
+            border-radius: 8px;
             padding: 60px 45px;
             transition: var(--transition-med);
             display: flex;
@@ -260,7 +263,7 @@
         .portfolio-card:hover {
             border-color: var(--gold-dim);
             background: var(--charcoal-light);
-            transform: translateY(-10px);
+            transform: translateY(-5px) scale(1.02);
         }
 
         .card-logo-container {
@@ -280,7 +283,7 @@
         .card-logo-fallback {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.2rem;
-            color: var(--gold);
+            color: var(--white);
         }
 
         .card-title {
@@ -333,7 +336,7 @@
         }
 
         @keyframes energyOrbit {
-            0% { stroke-dashoffset: 1885; opacity: 1; }
+            0% { stroke-dashoffset: 1634; opacity: 1; }
             100% { stroke-dashoffset: 0; opacity: 1; }
         }
 
@@ -350,7 +353,9 @@
 <body>
 
     <nav id="navbar">
-        <a href="#" class="nav-logo">Santa Monica Group</a>
+        <a href="#" class="nav-logo">
+            <img src="Santa Monica Group-02.png" alt="SM" class="nav-logo-img">
+        </a>
         <ul class="nav-links">
             <li><a href="#" class="active">Ecosystem</a></li>
             <li><a href="#strategy">Strategy</a></li>
@@ -363,20 +368,16 @@
     <main>
         <section class="hero" id="hero">
             <div class="logo-center">
-                <svg class="sm-emblem-svg" id="smEmblem" viewBox="0 0 100 100">
-                    <!-- Integrated SM Emblem (Visual representation of Santa Monica Group-02) -->
-                    <rect x="10" y="10" width="80" height="80" fill="white" />
-                    <text x="50" y="65" font-family="serif" font-size="50" text-anchor="middle" fill="black" font-weight="bold">SM</text>
-                </svg>
+                <img src="Santa Monica Group-02.png" alt="SM" class="sm-emblem-img" id="smEmblem">
                 <h1 class="company-name" id="smName">Santa Monica Group</h1>
             </div>
 
             <svg class="ecosystem-svg" viewBox="0 0 800 800">
                 <!-- Scene 2: Main Circle -->
-                <circle cx="400" cy="400" r="300" class="main-circle" id="mainCircle" />
+                <circle cx="400" cy="400" r="260" class="main-circle" id="mainCircle" />
 
                 <!-- Scene 4: Energy Orbit -->
-                <circle cx="400" cy="400" r="300" class="energy-highlight" id="energyCircle" />
+                <circle cx="400" cy="400" r="260" class="energy-highlight" id="energyCircle" />
 
                 <!-- Scene 3: Branches and Nodes -->
                 <g id="branchesG"></g>
@@ -468,13 +469,13 @@
                 { name: 'Remgro', angle: -90, logo: 'Santa Monica Group-04.png', initial: 'R' },
                 { name: 'PSG Group', angle: 0, logo: 'Santa Monica Group-03.png', initial: 'P' },
                 { name: 'Masimong', angle: 90, logo: 'Santa Monica Group-06.png', initial: 'M' },
-                { name: 'Zungu', angle: 180, logo: null, initial: 'Z' }
+                { name: 'Zungu Investments', angle: 180, logo: null, initial: 'Z' }
             ];
 
             const centerX = 400;
             const centerY = 400;
-            const innerRadius = 300;
-            const branchLength = 80;
+            const innerRadius = 260;
+            const branchLength = 90;
             const nodeRadius = 45;
 
             // Initialize SVG Elements
@@ -526,6 +527,7 @@
                 } else {
                     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     text.setAttribute('class', 'node-text');
+                    text.setAttribute('style', 'font-family: "Cormorant Garamond", serif; font-style: italic;');
                     text.textContent = company.initial;
                     contentG.appendChild(text);
                 }
@@ -573,25 +575,41 @@
             // Scene 4: Energy Pulse
             const endScene3 = 7500 + (companies.length * 1500);
             setTimeout(() => {
+                // Orbit the main circle
                 energyCircle.style.opacity = '1';
-                energyCircle.style.animation = 'energyOrbit 4s linear forwards';
+                energyCircle.style.animation = 'energyOrbit 3s cubic-bezier(0.45, 0, 0.55, 1) forwards';
 
-                // Branch Highlight Pulse
+                // Sequence highlights down each branch after orbit
                 setTimeout(() => {
                     companies.forEach((_, i) => {
                         setTimeout(() => {
                             const branch = document.getElementById(`branch-${i}`);
-                            branch.style.strokeWidth = '2.5';
-                            branch.style.opacity = '1';
-                            branch.style.stroke = 'var(--gold)';
+                            // Create a temporary energy line for the branch
+                            const energyBranch = branch.cloneNode(true);
+                            energyBranch.classList.remove('branch');
+                            energyBranch.style.stroke = 'var(--gold)';
+                            energyBranch.style.strokeWidth = '3';
+                            energyBranch.style.strokeDasharray = '120';
+                            energyBranch.style.strokeDashoffset = '120';
+                            energyBranch.style.opacity = '1';
+                            energyBranch.style.filter = 'blur(1px)';
+                            energyBranch.style.transition = 'stroke-dashoffset 0.8s ease-in-out';
+
+                            branch.parentElement.appendChild(energyBranch);
+
+                            // Trigger draw
                             setTimeout(() => {
-                                branch.style.strokeWidth = '1';
-                                branch.style.opacity = '0.4';
-                            }, 800);
-                        }, i * 250);
+                                energyBranch.style.strokeDashoffset = '0';
+                                setTimeout(() => {
+                                    energyBranch.style.opacity = '0';
+                                    energyBranch.style.transition = 'opacity 0.5s ease';
+                                    setTimeout(() => energyBranch.remove(), 500);
+                                }, 800);
+                            }, 10);
+                        }, i * 400);
                     });
-                }, 3200);
-            }, endScene3 + 1000);
+                }, 2800);
+            }, endScene3 + 500);
 
             // Scene 5: Final Transition
             setTimeout(() => {
