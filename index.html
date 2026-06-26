@@ -175,8 +175,30 @@
             transition: opacity 1s ease;
         }
 
+        /* ===== LOGO COLOR NORMALIZATION ===== */
+        .card-logo-img,
         .node-logo-img {
+            max-height: 45px;
+            max-width: 160px;
+            opacity: 0.9;
+        }
+
+        /* Default: dark/transparent logos → white (PSG, Zungu, Masimong) */
+        .card-logo-img:not([alt="Remgro"]),
+        .node-logo-img:not([href*="Remgro"]) {
             filter: brightness(0) invert(1);
+        }
+
+        /* Masimong: has colored letter, force through grayscale first */
+        .card-logo-img[alt="Masimong"],
+        .node-logo-img[href*="Masimong"] {
+            filter: grayscale(100%) brightness(0) invert(1);
+        }
+
+        /* Remgro: solid colored background → use contrast to create silhouette */
+        .card-logo-img[alt="Remgro"],
+        .node-logo-img[href*="Remgro"] {
+            filter: grayscale(100%) contrast(300%) brightness(1.2);
         }
 
         .node-text {
@@ -274,10 +296,7 @@
         }
 
         .card-logo-img {
-            max-height: 45px;
-            max-width: 160px;
-            filter: brightness(0) invert(1);
-            opacity: 0.85;
+            /* Handled by normalization block */
         }
 
         .card-logo-fallback {
@@ -517,7 +536,9 @@
 
                 if (company.logo) {
                     const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-                    img.setAttribute('href', company.logo);
+                    // Append company name as hash to satisfy CSS selectors like [href*="Remgro"]
+                    const href = company.logo + '#' + company.name.split(' ')[0];
+                    img.setAttribute('href', href);
                     img.setAttribute('x', -nodeRadius * 0.6);
                     img.setAttribute('y', -nodeRadius * 0.6);
                     img.setAttribute('width', nodeRadius * 1.2);
