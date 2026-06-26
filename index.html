@@ -295,10 +295,6 @@
             align-items: center;
         }
 
-        .card-logo-img {
-            /* Handled by normalization block */
-        }
-
         .card-logo-fallback {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.2rem;
@@ -381,8 +377,7 @@
             <li><a href="#portfolio">Portfolio</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
-        <div style="width: 150px;"></div> <!-- Spacing balance -->
-    </nav>
+        <div style="width: 150px;"></div> </nav>
 
     <main>
         <section class="hero" id="hero">
@@ -392,13 +387,10 @@
             </div>
 
             <svg class="ecosystem-svg" viewBox="0 0 800 800">
-                <!-- Scene 2: Main Circle -->
                 <circle cx="400" cy="400" r="260" class="main-circle" id="mainCircle" />
                 
-                <!-- Scene 4: Energy Orbit -->
                 <circle cx="400" cy="400" r="260" class="energy-highlight" id="energyCircle" />
 
-                <!-- Scene 3: Branches and Nodes -->
                 <g id="branchesG"></g>
                 <g id="nodesG"></g>
             </svg>
@@ -412,7 +404,6 @@
                 </div>
                 
                 <div class="portfolio-grid">
-                    <!-- Remgro -->
                     <div class="portfolio-card">
                         <div class="card-logo-container">
                             <img src="Santa Monica Group-04.png" alt="Remgro" class="card-logo-img">
@@ -425,7 +416,6 @@
                             <span class="card-tag">Consumer</span>
                         </div>
                     </div>
-                    <!-- PSG -->
                     <div class="portfolio-card">
                         <div class="card-logo-container">
                             <img src="Santa Monica Group-03.png" alt="PSG Group" class="card-logo-img">
@@ -438,7 +428,6 @@
                             <span class="card-tag">Banking</span>
                         </div>
                     </div>
-                    <!-- Masimong -->
                     <div class="portfolio-card">
                         <div class="card-logo-container">
                             <img src="Santa Monica Group-06.png" alt="Masimong" class="card-logo-img">
@@ -451,7 +440,6 @@
                             <span class="card-tag">Financial</span>
                         </div>
                     </div>
-                    <!-- Zungu -->
                     <div class="portfolio-card">
                         <div class="card-logo-container">
                             <span class="card-logo-fallback">Z</span>
@@ -468,7 +456,7 @@
             </section>
 
             <footer>
-                &copy; 2025 Santa Monica Group. Refined Excellence in Investment.
+                &copy; 2026 Santa Monica Group. Refined Excellence in Investment.
             </footer>
         </div>
     </main>
@@ -536,9 +524,9 @@
                 
                 if (company.logo) {
                     const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-                    // Append company name as hash to satisfy CSS selectors like [href*="Remgro"]
                     const href = company.logo + '#' + company.name.split(' ')[0];
-                    img.setAttribute('href', href);
+                    // FIX: Using Namespace setAttributeNS for proper SVG Image rendering across browsers
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', href);
                     img.setAttribute('x', -nodeRadius * 0.6);
                     img.setAttribute('y', -nodeRadius * 0.6);
                     img.setAttribute('width', nodeRadius * 1.2);
@@ -636,11 +624,13 @@
             setTimeout(() => {
                 navbar.classList.add('visible');
                 mainContent.classList.add('visible');
+                // FIX: Target explicitly overflowY to unlock scrolling without breaking page setup
                 document.body.style.overflowY = 'auto';
             }, endScene3 + 7000);
 
             // Lock scroll initially
-            document.body.style.overflow = 'hidden';
+            // FIX: Match targeting pattern cleanly
+            document.body.style.overflowY = 'hidden';
         });
     </script>
 </body>
