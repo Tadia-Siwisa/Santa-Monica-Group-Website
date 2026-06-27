@@ -15,6 +15,7 @@
             --gold: #c9a84c;
             --gold-dim: rgba(201, 168, 76, 0.4);
             --gold-faint: rgba(201, 168, 76, 0.1);
+            --gold-bright: rgba(201, 168, 76, 0.8);
             --white: #ffffff;
             --white-dim: rgba(255, 255, 255, 0.7);
             --slate: #888888;
@@ -35,6 +36,48 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
+        }
+
+        /* ===== STARFIELD BACKGROUND ===== */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+            animation-delay: var(--twinkle-delay);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: var(--max-opacity); transform: scale(1); }
+        }
+
+        /* Distant nebula clouds */
+        .nebula {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
+            animation: nebulaDrift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes nebulaDrift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -20px) scale(1.1); }
         }
 
         /* ===== NAVIGATION ===== */
@@ -92,7 +135,7 @@
             color: var(--gold);
         }
 
-        /* ===== HERO & ECOSYSTEM ===== */
+        /* ===== HERO & SPACESHIP ECOSYSTEM ===== */
         .hero {
             position: relative;
             width: 100%;
@@ -102,6 +145,7 @@
             justify-content: center;
             background: var(--black);
             overflow: hidden;
+            z-index: 2;
         }
 
         .logo-center {
@@ -134,6 +178,17 @@
             white-space: nowrap;
         }
 
+        .company-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            opacity: 0;
+            transform: translateY(10px);
+            margin-top: 10px;
+        }
+
         .ecosystem-svg {
             position: absolute;
             width: 90vmin;
@@ -148,7 +203,7 @@
             fill: none;
             stroke: var(--gold);
             stroke-width: 1;
-            stroke-dasharray: 1634; /* 2 * PI * 260 */
+            stroke-dasharray: 1634;
             stroke-dashoffset: 1634;
             opacity: 0.4;
         }
@@ -175,30 +230,15 @@
             transition: opacity 1s ease;
         }
 
-        /* ===== LOGO COLOR NORMALIZATION ===== */
-        .card-logo-img,
         .node-logo-img {
             max-height: 45px;
             max-width: 160px;
             opacity: 0.9;
         }
 
-        /* Default: dark/transparent logos → white (PSG, Zungu, Masimong) */
-        .card-logo-img:not([alt="Remgro"]),
-        .node-logo-img:not([href*="Remgro"]) {
+        /* Logo normalization for dark background */
+        .node-logo-img {
             filter: brightness(0) invert(1);
-        }
-
-        /* Masimong: has colored letter, force through grayscale first */
-        .card-logo-img[alt="Masimong"],
-        .node-logo-img[href*="Masimong"] {
-            filter: grayscale(100%) brightness(0) invert(1);
-        }
-
-        /* Remgro: solid colored background → use contrast to create silhouette */
-        .card-logo-img[alt="Remgro"],
-        .node-logo-img[href*="Remgro"] {
-            filter: grayscale(100%) contrast(300%) brightness(1.2);
         }
 
         .node-text {
@@ -211,7 +251,7 @@
             letter-spacing: 0.05em;
         }
 
-        /* Scene 4: Energy Highlight */
+        /* Energy highlight orbit */
         .energy-highlight {
             fill: none;
             stroke: var(--gold);
@@ -223,11 +263,30 @@
             filter: blur(2px);
         }
 
+        /* Spaceship engine glow */
+        .engine-glow {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 4;
+            opacity: 0;
+            filter: blur(8px);
+        }
+
+        /* Warp speed lines */
+        .warp-line {
+            stroke: var(--gold);
+            stroke-width: 1;
+            opacity: 0;
+            stroke-linecap: round;
+        }
+
         /* ===== CONTENT SECTION ===== */
         .content-transition {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
+            position: relative;
+            z-index: 2;
         }
 
         .content-transition.visible {
@@ -280,12 +339,32 @@
             align-items: flex-start;
             text-decoration: none;
             color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portfolio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(201, 168, 76, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .portfolio-card:hover::before {
+            opacity: 1;
         }
 
         .portfolio-card:hover {
             border-color: var(--gold-dim);
             background: var(--charcoal-light);
             transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(201, 168, 76, 0.1);
         }
 
         .card-logo-container {
@@ -296,7 +375,10 @@
         }
 
         .card-logo-img {
-            /* Handled by normalization block */
+            max-height: 50px;
+            max-width: 180px;
+            filter: brightness(0) invert(1);
+            opacity: 0.9;
         }
 
         .card-logo-fallback {
@@ -359,6 +441,22 @@
             100% { stroke-dashoffset: 0; opacity: 1; }
         }
 
+        @keyframes enginePulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        @keyframes warpSpeed {
+            0% { opacity: 0; stroke-dashoffset: 200; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0; stroke-dashoffset: 0; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
             nav { padding: 30px; }
@@ -371,9 +469,17 @@
 </head>
 <body>
 
+    <!-- Starfield Background -->
+    <div class="starfield" id="starfield"></div>
+
+    <!-- Nebula clouds -->
+    <div class="nebula" style="width: 600px; height: 600px; background: radial-gradient(circle, rgba(100,80,150,0.3) 0%, transparent 70%); top: 10%; left: -10%;"></div>
+    <div class="nebula" style="width: 500px; height: 500px; background: radial-gradient(circle, rgba(80,100,120,0.3) 0%, transparent 70%); bottom: 20%; right: -5%; animation-delay: -5s;"></div>
+    <div class="nebula" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(120,90,60,0.2) 0%, transparent 70%); top: 50%; left: 50%; animation-delay: -10s;"></div>
+
     <nav id="navbar">
         <a href="#" class="nav-logo">
-            <img src="Santa Monica Group-02.png" alt="SM" class="nav-logo-img">
+            <img src="santa_monica.png.jpg" alt="SM" class="nav-logo-img">
         </a>
         <ul class="nav-links">
             <li><a href="#" class="active">Ecosystem</a></li>
@@ -381,26 +487,33 @@
             <li><a href="#portfolio">Portfolio</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
-        <div style="width: 150px;"></div> <!-- Spacing balance -->
+        <div style="width: 150px;"></div>
     </nav>
 
     <main>
         <section class="hero" id="hero">
             <div class="logo-center">
-                <img src="Santa Monica Group-02.png" alt="SM" class="sm-emblem-img" id="smEmblem">
+                <img src="santa_monica.png.jpg" alt="SM" class="sm-emblem-img" id="smEmblem">
                 <h1 class="company-name" id="smName">Santa Monica Group</h1>
+                <p class="company-tagline" id="smTagline">Navigating the investment cosmos</p>
             </div>
 
             <svg class="ecosystem-svg" viewBox="0 0 800 800">
-                <!-- Scene 2: Main Circle -->
+                <!-- Main orbit path -->
                 <circle cx="400" cy="400" r="260" class="main-circle" id="mainCircle" />
-                
-                <!-- Scene 4: Energy Orbit -->
+
+                <!-- Energy orbit highlight -->
                 <circle cx="400" cy="400" r="260" class="energy-highlight" id="energyCircle" />
 
-                <!-- Scene 3: Branches and Nodes -->
+                <!-- Engine glow -->
+                <circle cx="400" cy="400" r="265" class="engine-glow" id="engineGlow" />
+
+                <!-- Branches and Nodes -->
                 <g id="branchesG"></g>
                 <g id="nodesG"></g>
+
+                <!-- Warp speed lines container -->
+                <g id="warpLinesG"></g>
             </svg>
         </section>
 
@@ -410,12 +523,12 @@
                     <span class="section-label">Investment Ecosystem</span>
                     <h2 class="section-title">Strategic Portfolio</h2>
                 </div>
-                
+
                 <div class="portfolio-grid">
                     <!-- Remgro -->
                     <div class="portfolio-card">
                         <div class="card-logo-container">
-                            <img src="Santa Monica Group-04.png" alt="Remgro" class="card-logo-img">
+                            <img src="remgro.png.jpg" alt="Remgro" class="card-logo-img">
                         </div>
                         <h3 class="card-title">Remgro Limited</h3>
                         <p class="card-description">A preeminent investment holding company managing a diverse portfolio across financial services, healthcare, consumer goods, and industrial infrastructure.</p>
@@ -428,7 +541,7 @@
                     <!-- PSG -->
                     <div class="portfolio-card">
                         <div class="card-logo-container">
-                            <img src="Santa Monica Group-03.png" alt="PSG Group" class="card-logo-img">
+                            <img src="psg.png.jpg" alt="PSG Group" class="card-logo-img">
                         </div>
                         <h3 class="card-title">PSG Group</h3>
                         <p class="card-description">A leading investment group focusing on long-term growth through strategic stakes in financial services, banking, and private education sectors.</p>
@@ -441,7 +554,7 @@
                     <!-- Masimong -->
                     <div class="portfolio-card">
                         <div class="card-logo-container">
-                            <img src="Santa Monica Group-06.png" alt="Masimong" class="card-logo-img">
+                            <img src="masimong.png.jpg" alt="Masimong" class="card-logo-img">
                         </div>
                         <h3 class="card-title">Masimong Investments</h3>
                         <p class="card-description">A diversified, majority black-owned investment vehicle with substantial interests in mining, agriculture, and high-growth financial entities.</p>
@@ -454,7 +567,7 @@
                     <!-- Zungu -->
                     <div class="portfolio-card">
                         <div class="card-logo-container">
-                            <span class="card-logo-fallback">Z</span>
+                            <img src="zungu.png.jpg" alt="Zungu Investments" class="card-logo-img">
                         </div>
                         <h3 class="card-title">Zungu Investments</h3>
                         <p class="card-description">A robust multi-sectoral investment firm dedicated to sustainable value creation across the southern African economic landscape.</p>
@@ -477,18 +590,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             const smEmblem = document.getElementById('smEmblem');
             const smName = document.getElementById('smName');
+            const smTagline = document.getElementById('smTagline');
             const mainCircle = document.getElementById('mainCircle');
             const energyCircle = document.getElementById('energyCircle');
+            const engineGlow = document.getElementById('engineGlow');
             const branchesG = document.getElementById('branchesG');
             const nodesG = document.getElementById('nodesG');
+            const warpLinesG = document.getElementById('warpLinesG');
             const navbar = document.getElementById('navbar');
             const mainContent = document.getElementById('mainContent');
+            const starfield = document.getElementById('starfield');
 
             const companies = [
-                { name: 'Remgro', angle: -90, logo: 'Santa Monica Group-04.png', initial: 'R' },
-                { name: 'PSG Group', angle: 0, logo: 'Santa Monica Group-03.png', initial: 'P' },
-                { name: 'Masimong', angle: 90, logo: 'Santa Monica Group-06.png', initial: 'M' },
-                { name: 'Zungu Investments', angle: 180, logo: null, initial: 'Z' }
+                { name: 'Remgro', angle: -90, logo: 'remgro.png.jpg', initial: 'R' },
+                { name: 'PSG Group', angle: 0, logo: 'psg.png.jpg', initial: 'P' },
+                { name: 'Masimong', angle: 90, logo: 'masimong.png.jpg', initial: 'M' },
+                { name: 'Zungu Investments', angle: 180, logo: 'zungu.png.jpg', initial: 'Z' }
             ];
 
             const centerX = 400;
@@ -497,19 +614,70 @@
             const branchLength = 90;
             const nodeRadius = 45;
 
-            // Initialize SVG Elements
+            // ===== CREATE STARFIELD =====
+            function createStarfield() {
+                const starCount = 300;
+                for (let i = 0; i < starCount; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+
+                    const size = Math.random() * 2 + 0.5;
+                    const x = Math.random() * 100;
+                    const y = Math.random() * 100;
+                    const duration = Math.random() * 4 + 2;
+                    const delay = Math.random() * 5;
+                    const maxOpacity = Math.random() * 0.7 + 0.1;
+
+                    star.style.cssText = `
+                        width: ${size}px;
+                        height: ${size}px;
+                        left: ${x}%;
+                        top: ${y}%;
+                        --twinkle-duration: ${duration}s;
+                        --twinkle-delay: ${delay}s;
+                        --max-opacity: ${maxOpacity};
+                    `;
+
+                    starfield.appendChild(star);
+                }
+            }
+            createStarfield();
+
+            // ===== CREATE WARP LINES =====
+            function createWarpLines() {
+                for (let i = 0; i < 20; i++) {
+                    const angle = (Math.random() * 360) * Math.PI / 180;
+                    const startDist = 300 + Math.random() * 100;
+                    const length = 50 + Math.random() * 100;
+
+                    const x1 = centerX + startDist * Math.cos(angle);
+                    const y1 = centerY + startDist * Math.sin(angle);
+                    const x2 = centerX + (startDist + length) * Math.cos(angle);
+                    const y2 = centerY + (startDist + length) * Math.sin(angle);
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                    line.setAttribute('class', 'warp-line');
+                    line.setAttribute('id', `warp-${i}`);
+                    warpLinesG.appendChild(line);
+                }
+            }
+            createWarpLines();
+
+            // ===== INITIALIZE SVG ELEMENTS =====
             companies.forEach((company, i) => {
                 const angleRad = (company.angle * Math.PI) / 180;
-                
-                // Coordinates
+
                 const xStart = centerX + innerRadius * Math.cos(angleRad);
                 const yStart = centerY + innerRadius * Math.sin(angleRad);
-                
-                // Branch terminates at the edge of the node circle
+
                 const branchEndDist = innerRadius + branchLength - nodeRadius;
                 const xEnd = centerX + branchEndDist * Math.cos(angleRad);
                 const yEnd = centerY + branchEndDist * Math.sin(angleRad);
-                
+
                 const nodeX = centerX + (innerRadius + branchLength) * Math.cos(angleRad);
                 const nodeY = centerY + (innerRadius + branchLength) * Math.sin(angleRad);
 
@@ -523,7 +691,8 @@
                 // Create Node
                 const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                 g.setAttribute('transform', `translate(${nodeX}, ${nodeY})`);
-                
+                g.setAttribute('id', `node-group-${i}`);
+
                 const frame = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                 frame.setAttribute('r', nodeRadius);
                 frame.setAttribute('class', 'node-frame');
@@ -533,17 +702,16 @@
                 const contentG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                 contentG.setAttribute('class', 'node-content');
                 contentG.setAttribute('id', `node-content-${i}`);
-                
+
                 if (company.logo) {
                     const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-                    // Append company name as hash to satisfy CSS selectors like [href*="Remgro"]
-                    const href = company.logo + '#' + company.name.split(' ')[0];
-                    img.setAttribute('href', href);
+                    img.setAttribute('href', company.logo);
                     img.setAttribute('x', -nodeRadius * 0.6);
                     img.setAttribute('y', -nodeRadius * 0.6);
                     img.setAttribute('width', nodeRadius * 1.2);
                     img.setAttribute('height', nodeRadius * 1.2);
                     img.setAttribute('class', 'node-logo-img');
+                    img.setAttribute('preserveAspectRatio', 'xMidYMid meet');
                     contentG.appendChild(img);
                 } else {
                     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -557,9 +725,9 @@
                 nodesG.appendChild(g);
             });
 
-            // ===== ANIMATION ORCHESTRATION =====
+            // ===== SPACESHIP JOURNEY ANIMATION ORCHESTRATION =====
 
-            // Scene 1: Logo & Name Reveal
+            // Scene 1: Logo & Name Reveal - Spaceship emerging from void
             setTimeout(() => {
                 smEmblem.style.transition = 'opacity 1.5s ease, transform 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
                 smEmblem.style.opacity = '1';
@@ -572,12 +740,18 @@
                 smName.style.transform = 'translateY(0)';
             }, 2200);
 
-            // Scene 2: SVG Circle Drawing
+            setTimeout(() => {
+                smTagline.style.transition = 'opacity 1.5s ease, transform 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
+                smTagline.style.opacity = '1';
+                smTagline.style.transform = 'translateY(0)';
+            }, 3200);
+
+            // Scene 2: Main orbit path draws - Spaceship orbit trajectory
             setTimeout(() => {
                 mainCircle.style.animation = 'drawPath 2.5s cubic-bezier(0.45, 0, 0.55, 1) forwards';
             }, 4500);
 
-            // Scene 3: Sequential Branch Growth
+            // Scene 3: Sequential Branch Growth - Docking stations appearing
             companies.forEach((_, i) => {
                 const startTime = 7500 + (i * 1500);
                 setTimeout(() => {
@@ -585,27 +759,46 @@
                     branch.style.transition = 'stroke-dashoffset 1s ease-out';
                     branch.style.strokeDashoffset = '0';
 
-                    // Node follows branch
+                    // Node follows branch - company docking
                     setTimeout(() => {
                         document.getElementById(`node-frame-${i}`).style.opacity = '1';
                         document.getElementById(`node-content-${i}`).style.opacity = '1';
+
+                        // Gentle float animation for docked nodes
+                        const nodeGroup = document.getElementById(`node-group-${i}`);
+                        nodeGroup.style.animation = `float ${3 + Math.random() * 2}s ease-in-out infinite`;
+                        nodeGroup.style.animationDelay = `${Math.random() * 2}s`;
                     }, 800);
                 }, startTime);
             });
 
-            // Scene 4: Energy Pulse
+            // Scene 4: Energy Pulse - Warp speed activation
             const endScene3 = 7500 + (companies.length * 1500);
             setTimeout(() => {
                 // Orbit the main circle
                 energyCircle.style.opacity = '1';
                 energyCircle.style.animation = 'energyOrbit 3s cubic-bezier(0.45, 0, 0.55, 1) forwards';
-                
+
+                // Engine glow pulses
+                engineGlow.style.opacity = '1';
+                engineGlow.style.animation = 'enginePulse 2s ease-in-out infinite';
+
+                // Warp speed lines activate
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        const line = document.getElementById(`warp-${i}`);
+                        if (line) {
+                            line.style.animation = `warpSpeed 1.5s ease-out forwards`;
+                            line.style.animationDelay = `${Math.random() * 0.5}s`;
+                        }
+                    }, i * 100);
+                }
+
                 // Sequence highlights down each branch after orbit
                 setTimeout(() => {
                     companies.forEach((_, i) => {
                         setTimeout(() => {
                             const branch = document.getElementById(`branch-${i}`);
-                            // Create a temporary energy line for the branch
                             const energyBranch = branch.cloneNode(true);
                             energyBranch.classList.remove('branch');
                             energyBranch.style.stroke = 'var(--gold)';
@@ -615,10 +808,9 @@
                             energyBranch.style.opacity = '1';
                             energyBranch.style.filter = 'blur(1px)';
                             energyBranch.style.transition = 'stroke-dashoffset 0.8s ease-in-out';
-                            
+
                             branch.parentElement.appendChild(energyBranch);
-                            
-                            // Trigger draw
+
                             setTimeout(() => {
                                 energyBranch.style.strokeDashoffset = '0';
                                 setTimeout(() => {
@@ -632,11 +824,15 @@
                 }, 2800);
             }, endScene3 + 500);
 
-            // Scene 5: Final Transition
+            // Scene 5: Final Transition - Journey continues to portfolio
             setTimeout(() => {
                 navbar.classList.add('visible');
                 mainContent.classList.add('visible');
                 document.body.style.overflowY = 'auto';
+
+                // Fade out engine glow gradually
+                engineGlow.style.transition = 'opacity 2s ease';
+                engineGlow.style.opacity = '0';
             }, endScene3 + 7000);
 
             // Lock scroll initially
