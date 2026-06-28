@@ -3,859 +3,1409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Santa Monica Group — Strategic Investment Holding</title>
+    <title>Santa Monica Group — Investment Ecosystem</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --black: #000000;
-            --charcoal: #080808;
-            --charcoal-light: #111111;
-            --gold: #c9a84c;
-            --gold-dim: rgba(201, 168, 76, 0.4);
-            --gold-faint: rgba(201, 168, 76, 0.1);
-            --white: #ffffff;
-            --white-dim: rgba(255, 255, 255, 0.7);
-            --slate: #888888;
+            --charcoal: #0a0a0a;
+            --charcoal-mid: #121212;
+            --charcoal-light: #1a1a1a;
+            --white: #f5f5f5;
+            --white-dim: #a0a0a0;
+            --slate: #6b6b6b;
+            --warm-gold: #c9a84c;
+            --warm-gold-dim: rgba(201, 168, 76, 0.08);
+            --warm-gold-med: rgba(201, 168, 76, 0.15);
+            --warm-gold-bright: rgba(201, 168, 76, 0.3);
+            --border-subtle: rgba(255,255,255,0.04);
+            --border-hover: rgba(201, 168, 76, 0.2);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
-            background-color: var(--black);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--charcoal);
             color: var(--white);
-            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
         }
 
-        /* ===== STARFIELD ===== */
-        .starfield {
+        /* ===== CINEMATIC OPENING ===== */
+        .opening-sequence {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
-        .star {
+
+        .opening-sequence.complete {
+            animation: sequenceOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes sequenceOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+        }
+
+        .seq-logo {
             position: absolute;
-            background: white;
-            border-radius: 50%;
             opacity: 0;
-            animation: twinkle var(--twinkle-duration) ease-in-out infinite;
-            animation-delay: var(--twinkle-delay);
+            transform: scale(0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
         }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: var(--max-opacity); transform: scale(1); }
+
+        .seq-logo svg {
+            width: 72px;
+            height: 72px;
         }
-        .nebula {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 1;
-            animation: nebulaDrift 20s ease-in-out infinite alternate;
+
+        .seq-logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--white);
         }
-        @keyframes nebulaDrift {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, -20px) scale(1.1); }
+
+        .seq-logo.active {
+            animation: logoAppear 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes logoAppear {
+            0% { opacity: 0; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .seq-mission {
+            position: absolute;
+            opacity: 0;
+            text-align: center;
+            max-width: 520px;
+            padding: 0 24px;
+        }
+
+        .seq-mission p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.35rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--white-dim);
+            line-height: 1.7;
+            letter-spacing: 0.02em;
+        }
+
+        .seq-mission.active {
+            animation: missionAppear 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes missionAppear {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .seq-industries {
+            position: absolute;
+            width: 100%;
+            max-width: 1100px;
+            padding: 0 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            opacity: 0;
+        }
+
+        .seq-industries.active {
+            animation: industriesAppear 0.8s ease forwards;
+        }
+
+        @keyframes industriesAppear {
+            to { opacity: 1; }
+        }
+
+        .seq-industry {
+            border-top: 1px solid var(--border-subtle);
+            padding: 0;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.6s ease,
+                        padding 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .seq-industry.open {
+            max-height: 400px;
+            opacity: 1;
+            padding: 24px 0;
+        }
+
+        .seq-industry-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+        }
+
+        .seq-industry.open .seq-industry-name {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .seq-companies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+        }
+
+        .seq-industry.open .seq-companies {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .seq-company-tag {
+            padding: 8px 18px;
+            border: 1px solid rgba(201, 168, 76, 0.2);
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--white-dim);
+            letter-spacing: 0.05em;
+            background: rgba(201, 168, 76, 0.03);
+        }
+
+        /* ===== MAIN SITE ===== */
+        .main-site {
+            opacity: 0;
+            transition: opacity 1s ease 0.3s;
+        }
+
+        .main-site.visible {
+            opacity: 1;
         }
 
         /* ===== NAVIGATION ===== */
         nav {
             position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            padding: 24px 50px;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 48px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-            pointer-events: none;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+            transition: background 0.5s ease, backdrop-filter 0.5s ease;
         }
-        nav.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-subtle);
         }
-        .nav-logo { display: flex; align-items: center; }
-        .nav-logo-text {
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .nav-logo span {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            font-weight: 300;
-            letter-spacing: 0.2em;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--white);
-            text-decoration: none;
         }
+
         .nav-links {
             display: flex;
-            gap: 45px;
+            gap: 36px;
             list-style: none;
         }
+
         .nav-links a {
             text-decoration: none;
-            color: var(--white-dim);
+            color: var(--slate);
             font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.25em;
+            font-weight: 400;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             transition: color 0.4s ease;
+            position: relative;
         }
-        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--warm-gold);
+            transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            padding: 9px 22px;
+            border: 1px solid var(--warm-gold);
+            color: var(--warm-gold);
+            text-decoration: none;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+        }
+
+        .nav-cta:hover {
+            background: var(--warm-gold);
+            color: var(--charcoal);
+        }
 
         /* ===== HERO ===== */
         .hero {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--black);
-            overflow: hidden;
-            padding-top: 80px;
-        }
-
-        .ecosystem-svg {
-            position: absolute;
-            width: 85vmin;
-            height: 85vmin;
-            max-width: 900px;
-            max-height: 900px;
-            pointer-events: none;
-            overflow: visible;
-        }
-
-        .main-circle {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1;
-            stroke-dasharray: 1885;
-            stroke-dashoffset: 1885;
-            opacity: 0.4;
-        }
-
-        .branch {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1;
-            stroke-dasharray: 100;
-            stroke-dashoffset: 100;
-            opacity: 0.4;
-        }
-
-        .node-frame {
-            fill: var(--black);
-            stroke: var(--gold);
-            stroke-width: 1;
-            opacity: 0;
-            transition: opacity 0.6s ease;
-        }
-
-        .node-content {
-            opacity: 0;
-            transition: opacity 0.6s ease;
-        }
-
-        .node-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 20px;
-            font-weight: 300;
-            fill: var(--white);
-            text-anchor: middle;
-            dominant-baseline: middle;
-            letter-spacing: 0.05em;
-        }
-
-        /* Rotating light */
-        .rotating-light {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-dasharray: 80, 1805;
-            stroke-dashoffset: 0;
-            opacity: 0;
-            filter: blur(1px);
-            transform-origin: 400px 400px;
-        }
-        .rotating-light.active {
-            opacity: 0.6;
-            animation: rotateLight 10s linear infinite;
-        }
-        @keyframes rotateLight {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Center content */
-        .center-group {
-            opacity: 0;
-        }
-        .center-group.visible {
-            opacity: 1;
-            transition: opacity 1s ease;
-        }
-        .center-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 20px;
-            font-weight: 300;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            fill: var(--white);
-            text-anchor: middle;
-        }
-        .center-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 10px;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            fill: var(--gold-dim);
-            text-anchor: middle;
-        }
-
-        /* Scroll down */
-        .scroll-down {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            opacity: 0;
-            text-decoration: none;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 48px 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(201, 168, 76, 0.025) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(201, 168, 76, 0.015) 0%, transparent 60%);
             pointer-events: none;
-            transition: opacity 0.8s ease;
         }
-        .scroll-down.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .scroll-down span {
-            font-size: 0.55rem;
-            letter-spacing: 0.4em;
+
+        .hero-label {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.45em;
             text-transform: uppercase;
-            color: var(--gold-dim);
-        }
-        .scroll-arrow {
-            width: 18px;
-            height: 18px;
-            border-right: 1px solid var(--gold-dim);
-            border-bottom: 1px solid var(--gold-dim);
-            transform: rotate(45deg);
-            animation: bounceArrow 2s ease-in-out infinite;
-        }
-        @keyframes bounceArrow {
-            0%, 100% { transform: rotate(45deg) translate(0, 0); }
-            50% { transform: rotate(45deg) translate(4px, 4px); }
+            color: var(--warm-gold);
+            margin-bottom: 32px;
         }
 
-        /* ===== NETFLIX-STYLE PORTFOLIO ===== */
-        .content-transition {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease 0.3s, transform 1s ease 0.3s;
-        }
-        .content-transition.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.4rem, 5vw, 4.5rem);
+            font-weight: 300;
+            line-height: 1.1;
+            max-width: 800px;
+            margin-bottom: 28px;
         }
 
-        .portfolio {
-            padding: 100px 0 80px;
+        .hero h1 em {
+            font-style: italic;
+            color: var(--warm-gold);
+        }
+
+        .hero-mission {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--white-dim);
+            max-width: 520px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scroll-hint span {
+            font-size: 0.6rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--slate);
+        }
+
+        .scroll-hint .line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--warm-gold), transparent);
+            animation: scrollPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.2; transform: scaleY(0.5); }
+            50% { opacity: 0.8; transform: scaleY(1); }
+        }
+
+        /* ===== ECOSYSTEM DASHBOARD ===== */
+        .ecosystem {
+            padding: 0 48px 100px;
             max-width: 1400px;
             margin: 0 auto;
         }
-        .section-header {
+
+        .ecosystem-header {
             text-align: center;
-            margin-bottom: 60px;
-            padding: 0 50px;
+            padding: 80px 0 60px;
+            border-top: 1px solid var(--border-subtle);
         }
-        .section-label {
+
+        .ecosystem-header .section-label {
             font-size: 0.6rem;
-            letter-spacing: 0.5em;
+            font-weight: 500;
+            letter-spacing: 0.45em;
             text-transform: uppercase;
-            color: var(--gold);
-            display: block;
+            color: var(--warm-gold);
             margin-bottom: 18px;
-            font-weight: 600;
+            display: block;
         }
-        .section-title {
+
+        .ecosystem-header h2 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2.8rem;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
             font-weight: 300;
-            letter-spacing: 0.02em;
+            margin-bottom: 12px;
         }
 
-        /* Netflix-style rows */
-        .industry-row {
-            margin-bottom: 50px;
-            padding: 0 50px;
-        }
-        .industry-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .industry-header h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-        }
-        .industry-header .count {
-            font-size: 0.65rem;
-            color: var(--gold-dim);
-            letter-spacing: 0.1em;
-        }
-        .industry-line {
-            flex: 1;
-            height: 1px;
-            background: var(--gold-faint);
-            margin-left: 10px;
+        .ecosystem-header p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--slate);
+            max-width: 460px;
+            margin: 0 auto;
+            line-height: 1.7;
         }
 
-        /* Horizontal scrolling cards */
-        .cards-row {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding-bottom: 20px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--gold-dim) transparent;
-        }
-        .cards-row::-webkit-scrollbar {
-            height: 4px;
-        }
-        .cards-row::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .cards-row::-webkit-scrollbar-thumb {
-            background: var(--gold-dim);
-            border-radius: 2px;
+        /* ===== UNIFIED ECOSYSTEM GRID ===== */
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border-subtle);
+            border: 1px solid var(--border-subtle);
         }
 
-        .company-card {
-            flex: 0 0 280px;
-            background: var(--charcoal);
-            border: 1px solid var(--gold-faint);
-            border-radius: 6px;
-            padding: 35px 28px;
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            cursor: pointer;
+        .ecosystem-column {
+            background: var(--charcoal-mid);
+            padding: 0;
             position: relative;
             overflow: hidden;
         }
+
+        .column-header {
+            padding: 28px 28px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+        }
+
+        .column-header h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+        }
+
+        .column-header .column-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+
+        .column-header .column-count {
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--slate);
+        }
+
+        /* ===== COMPANY CARD ===== */
+        .company-card {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .company-card:last-child {
+            border-bottom: none;
+        }
+
         .company-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--warm-gold);
             opacity: 0;
             transition: opacity 0.4s ease;
         }
+
         .company-card:hover::before {
             opacity: 1;
         }
+
         .company-card:hover {
-            border-color: var(--gold-dim);
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(201,168,76,0.08);
+            background: linear-gradient(90deg, transparent 0%, rgba(201, 168, 76, 0.03) 50%, transparent 100%);
         }
-        .card-initial {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.2rem;
-            font-weight: 300;
-            color: var(--gold);
-            margin-bottom: 15px;
-            line-height: 1;
-            position: relative;
-            z-index: 1;
+
+        .company-card.expanded {
+            background: var(--charcoal-light);
+            padding: 28px 28px 32px;
         }
-        .card-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 400;
-            margin-bottom: 10px;
-            letter-spacing: 0.03em;
-            position: relative;
-            z-index: 1;
-        }
-        .card-subtitle {
-            font-size: 0.75rem;
-            color: var(--gold-dim);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
-        }
-        .card-description {
-            font-size: 0.85rem;
-            line-height: 1.6;
-            color: var(--white-dim);
-            font-weight: 300;
-            position: relative;
-            z-index: 1;
-        }
-        .card-tags {
+
+        .company-top {
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 15px;
-            position: relative;
-            z-index: 1;
+            align-items: center;
+            gap: 16px;
         }
-        .card-tag {
-            font-size: 0.55rem;
+
+        .company-logo {
+            width: 44px;
+            height: 44px;
+            background: var(--charcoal-light);
+            border: 1px solid rgba(201, 168, 76, 0.12);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--warm-gold);
+            flex-shrink: 0;
+            transition: all 0.4s ease;
+        }
+
+        .company-card:hover .company-logo {
+            border-color: rgba(201, 168, 76, 0.3);
+            background: rgba(201, 168, 76, 0.05);
+            transform: scale(1.05);
+        }
+
+        .company-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--white);
+            transition: color 0.3s ease;
+        }
+
+        .company-card:hover .company-name {
+            color: var(--warm-gold);
+        }
+
+        .company-summary {
+            font-size: 0.78rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            line-height: 1.6;
+            margin-top: 12px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.4s ease,
+                        margin-top 0.4s ease;
+        }
+
+        .company-card:hover .company-summary,
+        .company-card.expanded .company-summary {
+            max-height: 80px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 0;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s,
+                        opacity 0.4s ease 0.1s,
+                        margin-top 0.4s ease 0.1s;
+        }
+
+        .company-card.expanded .company-actions {
+            max-height: 60px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+
+        .discuss-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            color: var(--warm-gold);
+            text-decoration: none;
+            font-size: 0.65rem;
+            font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--gold);
-            border: 1px solid var(--gold-faint);
-            padding: 4px 10px;
-            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            white-space: nowrap;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
         }
 
-        /* Organogram section */
-        .organogram-section {
-            padding: 80px 50px;
+        .discuss-btn:hover {
+            background: var(--warm-gold);
+            color: var(--charcoal);
+            border-color: var(--warm-gold);
+            gap: 12px;
+        }
+
+        .discuss-btn svg {
+            width: 11px;
+            height: 11px;
+            transition: transform 0.3s ease;
+        }
+
+        .discuss-btn:hover svg {
+            transform: translateX(3px);
+        }
+
+        .expand-indicator {
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .company-card:hover .expand-indicator {
+            opacity: 0.4;
+        }
+
+        .expand-indicator svg {
+            width: 10px;
+            height: 10px;
+            stroke: var(--warm-gold);
+            stroke-width: 1.5;
+            fill: none;
+            transition: transform 0.3s ease;
+        }
+
+        .company-card.expanded .expand-indicator svg {
+            transform: rotate(180deg);
+        }
+
+        /* ===== EXPANDED DETAIL PANEL ===== */
+        .company-detail {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.4s ease,
+                        margin-top 0.4s ease;
+        }
+
+        .company-card.expanded .company-detail {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 20px;
+        }
+
+        .company-detail-inner {
+            padding: 20px;
+            background: rgba(201, 168, 76, 0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+        }
+
+        .company-detail-inner h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: 12px;
+        }
+
+        .company-detail-inner p {
+            font-size: 0.82rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            line-height: 1.65;
+            margin-bottom: 16px;
+        }
+
+        .company-detail-inner .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .detail-tag {
+            padding: 5px 12px;
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: var(--slate);
+            letter-spacing: 0.05em;
+            background: rgba(201, 168, 76, 0.02);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            padding: 100px 48px;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+            background: linear-gradient(180deg, var(--charcoal-mid) 0%, #080808 100%);
+        }
+
+        .contact-section .section-label {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .contact-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 300;
+            margin-bottom: 16px;
+        }
+
+        .contact-section p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            max-width: 440px;
+            margin: 0 auto 36px;
+            line-height: 1.7;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 36px;
+            background: var(--warm-gold);
+            color: var(--charcoal);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .contact-btn:hover {
+            background: var(--white);
+            gap: 16px;
+        }
+
+        .contact-btn svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 48px 48px 36px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-content {
             max-width: 1200px;
             margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
-        .organogram-header {
-            text-align: center;
-            margin-bottom: 60px;
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
-        .organogram-header h2 {
+
+        .footer-brand svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .footer-brand span {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2.2rem;
-            font-weight: 300;
-            letter-spacing: 0.02em;
-        }
-        .organogram-header p {
             font-size: 0.9rem;
-            color: var(--white-dim);
-            margin-top: 10px;
-        }
-        .organogram-svg {
-            width: 100%;
-            max-width: 1000px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-
-        footer {
-            padding: 60px 50px;
-            border-top: 1px solid var(--charcoal-light);
-            text-align: center;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            color: var(--slate);
+            font-weight: 400;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
+            color: var(--white);
         }
 
-        @keyframes fadeIn { to { opacity: 1; } }
-        @keyframes drawPath { to { stroke-dashoffset: 0; } }
+        .footer-tagline {
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--slate);
+            max-width: 260px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 48px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            text-decoration: none;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.68rem;
+            color: var(--slate);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-legal a {
+            font-size: 0.68rem;
+            color: var(--slate);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal a:hover {
+            color: var(--white);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .ecosystem-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
         @media (max-width: 900px) {
-            nav { padding: 20px 30px; }
-            .nav-links { display: none; }
-            .section-title { font-size: 2.2rem; }
-            .portfolio { padding: 60px 0; }
-            .industry-row { padding: 0 30px; }
-            .company-card { flex: 0 0 240px; }
-            .ecosystem-svg { width: 95vmin; height: 95vmin; }
+            nav {
+                padding: 18px 24px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hero {
+                padding: 100px 24px 60px;
+            }
+            .ecosystem {
+                padding: 0 24px 80px;
+            }
+            .ecosystem-grid {
+                grid-template-columns: 1fr;
+            }
+            .company-card {
+                padding: 20px 24px;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 32px;
+            }
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 28px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
 
-    <div class="starfield" id="starfield"></div>
-    <div class="nebula" style="width: 500px; height: 500px; background: radial-gradient(circle, rgba(100,80,150,0.3) 0%, transparent 70%); top: 10%; left: -10%;"></div>
-    <div class="nebula" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(80,100,120,0.3) 0%, transparent 70%); bottom: 20%; right: -5%; animation-delay: -5s;"></div>
+    <!-- ===== CINEMATIC OPENING SEQUENCE ===== -->
+    <div class="opening-sequence" id="openingSequence">
 
-    <nav id="navbar">
-        <a href="index.html" class="nav-logo">
-            <span class="nav-logo-text">SM</span>
-        </a>
-        <ul class="nav-links">
-            <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="#portfolio" id="portfolioLink">Portfolio</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-        </ul>
-        <div style="width: 120px;"></div>
-    </nav>
-
-    <main>
-        <section class="hero" id="hero">
-            <svg class="ecosystem-svg" viewBox="0 0 800 800">
-                <circle cx="400" cy="400" r="300" class="main-circle" id="mainCircle" />
-                <circle cx="400" cy="400" r="300" class="rotating-light" id="rotatingLight" />
-                <g id="branchesG"></g>
-                <g id="nodesG"></g>
-                <g class="center-group" id="centerGroup">
-                    <polygon points="400,360 420,395 400,430 380,395" fill="none" stroke="var(--gold)" stroke-width="1.5" opacity="0.8"/>
-                    <circle cx="400" cy="395" r="8" fill="var(--gold)" opacity="0.6"/>
-                    <text x="400" y="460" class="center-name">Santa Monica Group</text>
-                    <text x="400" y="480" class="center-subtitle">Investment Holding</text>
-                </g>
+        <!-- Stage 1: Logo -->
+        <div class="seq-logo" id="seqLogo">
+            <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M36 4L66 22V50L36 68L6 50V22L36 4Z" stroke="#c9a84c" stroke-width="1.2" fill="none"/>
+                <path d="M36 16L54 27V49L36 60L18 49V27L36 16Z" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.4"/>
+                <circle cx="36" cy="38" r="5" fill="#c9a84c" opacity="0.7"/>
             </svg>
+            <div class="seq-logo-text">Santa Monica</div>
+        </div>
 
-            <a href="#portfolio" class="scroll-down" id="scrollDown">
+        <!-- Stage 2: Mission -->
+        <div class="seq-mission" id="seqMission">
+            <p>We build enduring value by partnering with exceptional businesses across Africa's most strategic industries.</p>
+        </div>
+
+        <!-- Stage 3: Industries Assembling -->
+        <div class="seq-industries" id="seqIndustries">
+            <div class="seq-industry" id="seqInd1">
+                <div class="seq-industry-name">Mining & Resources</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">Remgro</span>
+                    <span class="seq-company-tag">Masimong Group</span>
+                </div>
+            </div>
+            <div class="seq-industry" id="seqInd2">
+                <div class="seq-industry-name">Financial Services</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">PSG Group</span>
+                    <span class="seq-company-tag">ZICO Holdings</span>
+                </div>
+            </div>
+            <div class="seq-industry" id="seqInd3">
+                <div class="seq-industry-name">Energy & Infrastructure</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">Phembani Group</span>
+                </div>
+            </div>
+            <div class="seq-industry" id="seqInd4">
+                <div class="seq-industry-name">Healthcare & Industrial</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">Remgro</span>
+                    <span class="seq-company-tag">Masimong Group</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN SITE ===== -->
+    <div class="main-site" id="mainSite">
+
+        <!-- Navigation -->
+        <nav id="navbar">
+            <a href="#" class="nav-logo">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 2L28 11V25L16 30L4 25V11L16 2Z" stroke="#c9a84c" stroke-width="1" fill="none"/>
+                    <circle cx="16" cy="17" r="2.5" fill="#c9a84c" opacity="0.7"/>
+                </svg>
+                <span>Santa Monica</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#ecosystem">Ecosystem</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#investors">Investors</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#contact" class="nav-cta">Investor Relations</a>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero" id="about">
+            <div class="hero-label">Diversified Investment Holding Group</div>
+            <h1>Building <em>enduring value</em> across Africa's most strategic industries</h1>
+            <p class="hero-mission">We partner with exceptional management teams to create sustainable growth through disciplined, long-term capital allocation.</p>
+            <div class="scroll-hint">
                 <span>Explore</span>
-                <div class="scroll-arrow"></div>
+                <div class="line"></div>
+            </div>
+        </section>
+
+        <!-- Investment Ecosystem Dashboard -->
+        <section class="ecosystem" id="ecosystem">
+            <div class="ecosystem-header reveal">
+                <span class="section-label">Our Investment Ecosystem</span>
+                <h2>Strategic Holdings</h2>
+                <p>Five portfolio companies across core sectors, each selected for growth potential and alignment with Africa's development trajectory.</p>
+            </div>
+
+            <div class="ecosystem-grid reveal">
+                <!-- Column 1: Mining & Resources -->
+                <div class="ecosystem-column">
+                    <div class="column-header">
+                        <h3>Mining & Resources</h3>
+                        <div class="column-line"></div>
+                        <span class="column-count">2 Holdings</span>
+                    </div>
+
+                    <div class="company-card" data-company="remgro">
+                        <div class="company-top">
+                            <div class="company-logo">R</div>
+                            <div class="company-name">Remgro Limited</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            Diversified South African investment holding company with interests in healthcare, financial services, consumer products, and industrial sectors. Listed on the JSE.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>Remgro is one of South Africa's premier investment holding companies, with a portfolio spanning healthcare (Mediclinic), financial services (FirstRand, RMB Holdings), consumer products, and industrial assets. Founded by Dr Anton Rupert in the 1940s, it delivers consistent dividend growth and capital appreciation through long-term strategic partnerships.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">JSE Listed</span>
+                                    <span class="detail-tag">Healthcare</span>
+                                    <span class="detail-tag">Banking</span>
+                                    <span class="detail-tag">Consumer</span>
+                                    <span class="detail-tag">Industrial</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="company-actions">
+                            <a href="#" class="discuss-btn">
+                                Discuss Investment
+                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M1 6h10M7 2l4 4-4 4"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="company-card" data-company="masimong">
+                        <div class="company-top">
+                            <div class="company-logo">M</div>
+                            <div class="company-name">Masimong Group Holdings</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            Majority black-owned investment company focused on mining, agriculture, financial services, and industrial sectors across South Africa.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>Masimong is a diversified majority black-owned and controlled investment company led by Mike Teke. Its portfolio includes key stakes in Seriti Resources (coal mining), agricultural assets, and industrial holdings. The company is committed to empowerment, growth, and value creation with a Level 2 BBBEE rating.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">Mining</span>
+                                    <span class="detail-tag">Agriculture</span>
+                                    <span class="detail-tag">BBBEE Level 2</span>
+                                    <span class="detail-tag">Seriti Resources</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="company-actions">
+                            <a href="#" class="discuss-btn">
+                                Discuss Investment
+                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M1 6h10M7 2l4 4-4 4"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Financial Services -->
+                <div class="ecosystem-column">
+                    <div class="column-header">
+                        <h3>Financial Services</h3>
+                        <div class="column-line"></div>
+                        <span class="column-count">2 Holdings</span>
+                    </div>
+
+                    <div class="company-card" data-company="psg">
+                        <div class="company-top">
+                            <div class="company-logo">P</div>
+                            <div class="company-name">PSG Group</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            Leading South African investment holding company with interests in banking, education, and private equity across sub-Saharan Africa.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>PSG Group is a diversified investment holding company with significant interests in financial services, education, and private equity. Known for its entrepreneurial culture and value creation track record, PSG has built substantial shareholder value through strategic investments in high-growth African businesses.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">JSE Listed</span>
+                                    <span class="detail-tag">Banking</span>
+                                    <span class="detail-tag">Education</span>
+                                    <span class="detail-tag">Private Equity</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="company-actions">
+                            <a href="#" class="discuss-btn">
+                                Discuss Investment
+                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M1 6h10M7 2l4 4-4 4"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="company-card" data-company="zico">
+                        <div class="company-top">
+                            <div class="company-logo">Z</div>
+                            <div class="company-name">ZICO Holdings</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            ASEAN-focused investment holding providing legal, corporate finance, asset management, and Shariah advisory services across Southeast Asia.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>ZICO Holdings is a multidisciplinary professional services group listed on the Singapore Exchange. It provides legal, Shariah advisory, corporate finance, asset management, trust, and intellectual property services across Singapore, Malaysia, Thailand, Indonesia, and beyond. Its diversified service offering creates multiple revenue streams and cross-selling opportunities.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">SGX Listed</span>
+                                    <span class="detail-tag">Legal Services</span>
+                                    <span class="detail-tag">Shariah Advisory</span>
+                                    <span class="detail-tag">Asset Management</span>
+                                    <span class="detail-tag">ASEAN</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="company-actions">
+                            <a href="#" class="discuss-btn">
+                                Discuss Investment
+                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M1 6h10M7 2l4 4-4 4"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Energy & Infrastructure -->
+                <div class="ecosystem-column">
+                    <div class="column-header">
+                        <h3>Energy & Infrastructure</h3>
+                        <div class="column-line"></div>
+                        <span class="column-count">1 Holding</span>
+                    </div>
+
+                    <div class="company-card" data-company="phembani">
+                        <div class="company-top">
+                            <div class="company-logo">Ph</div>
+                            <div class="company-name">Phembani Group</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            South African investment firm focused on energy, resources, and infrastructure with a commitment to economic transformation and sustainable development.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>Phembani Group is a South African investment company with strategic interests in energy, resources, and infrastructure. Based in Sandton, Johannesburg, the firm is committed to driving economic transformation while delivering strong investment returns. Its focus on critical infrastructure aligns with Africa's development needs.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">Energy</span>
+                                    <span class="detail-tag">Resources</span>
+                                    <span class="detail-tag">Infrastructure</span>
+                                    <span class="detail-tag">Transformation</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="company-actions">
+                            <a href="#" class="discuss-btn">
+                                Discuss Investment
+                                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M1 6h10M7 2l4 4-4 4"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Spacer for visual balance -->
+                    <div class="company-card" style="cursor: default; pointer-events: none;">
+                        <div class="company-top">
+                            <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="1">
+                                    <circle cx="10" cy="10" r="8"/>
+                                    <path d="M10 6v4l3 3"/>
+                                </svg>
+                            </div>
+                            <div style="font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 300; color: var(--slate); font-style: italic;">New opportunities under review</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section" id="contact">
+            <span class="section-label">Investor Relations</span>
+            <h2>Contact the Investment Team</h2>
+            <p>We welcome enquiries from institutional investors, strategic partners, and management teams seeking capital partnership.</p>
+            <a href="mailto:investors@santamonicagroup.com" class="contact-btn">
+                Get in Touch
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 7h12M8 2l5 5-5 5"/>
+                </svg>
             </a>
         </section>
 
-        <div class="content-transition" id="mainContent">
-            <!-- ORGANOGRAM SECTION -->
-            <section class="organogram-section" id="organogram">
-                <div class="organogram-header">
-                    <span class="section-label">Structure</span>
-                    <h2>Investment Organogram</h2>
-                    <p>Our portfolio organized by strategic industry verticals</p>
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand">
+                        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 2L24 9V21L14 26L4 21V9L14 2Z" stroke="#c9a84c" stroke-width="0.8" fill="none"/>
+                            <circle cx="14" cy="15" r="2" fill="#c9a84c" opacity="0.5"/>
+                        </svg>
+                        <span>Santa Monica</span>
+                    </div>
+                    <p class="footer-tagline">Building enduring value across Africa's key industries since 1998.</p>
                 </div>
-                <svg class="organogram-svg" viewBox="0 0 1000 600" id="organogramSvg">
-                    <!-- Will be drawn by JS -->
-                </svg>
-            </section>
-
-            <!-- NETFLIX-STYLE PORTFOLIO -->
-            <section class="portfolio" id="portfolio">
-                <div class="section-header">
-                    <span class="section-label">Investment Ecosystem</span>
-                    <h2 class="section-title">Strategic Portfolio</h2>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <a href="#">About Us</a>
+                        <a href="#">Leadership</a>
+                        <a href="#">Our History</a>
+                        <a href="#">Careers</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Investors</h4>
+                        <a href="#">Annual Reports</a>
+                        <a href="#">Share Price</a>
+                        <a href="#">Dividends</a>
+                        <a href="#">AGM Information</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Portfolio</h4>
+                        <a href="#">Mining & Resources</a>
+                        <a href="#">Financial Services</a>
+                        <a href="#">Energy & Infrastructure</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Contact</h4>
+                        <a href="#">General Enquiries</a>
+                        <a href="#">Media Relations</a>
+                        <a href="#">Investor Relations</a>
+                    </div>
                 </div>
-                <div id="portfolioRows"></div>
-            </section>
-            <footer>
-                &copy; 2025 Santa Monica Group. Refined Excellence in Investment.
-            </footer>
-        </div>
-    </main>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Santa Monica Group Limited. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const mainCircle = document.getElementById('mainCircle');
-            const rotatingLight = document.getElementById('rotatingLight');
-            const branchesG = document.getElementById('branchesG');
-            const nodesG = document.getElementById('nodesG');
-            const centerGroup = document.getElementById('centerGroup');
-            const navbar = document.getElementById('navbar');
-            const mainContent = document.getElementById('mainContent');
-            const scrollDown = document.getElementById('scrollDown');
-            const starfield = document.getElementById('starfield');
-            const portfolioLink = document.getElementById('portfolioLink');
-            const organogramSvg = document.getElementById('organogramSvg');
-            const portfolioRows = document.getElementById('portfolioRows');
+        // ===== CINEMATIC SEQUENCE =====
+        const seqLogo = document.getElementById('seqLogo');
+        const seqMission = document.getElementById('seqMission');
+        const seqIndustries = document.getElementById('seqIndustries');
+        const openingSequence = document.getElementById('openingSequence');
+        const mainSite = document.getElementById('mainSite');
 
-            // Real companies grouped by industry
-            const industries = {
-                'Property': [
-                    { name: 'Mkhize Property Fund', abbr: 'MPF', desc: 'A leading property investment fund focused on commercial and residential real estate development across South Africa.' }
-                ],
-                'Energy': [
-                    { name: 'Oregano Power and Energy Group', abbr: 'OPEG', desc: 'An integrated energy company specializing in power generation, renewable energy solutions, and energy infrastructure. www.opeg.co.za', website: 'www.opeg.co.za' }
-                ],
-                'Infrastructure': [
-                    { name: 'JSS Infrastructure Group', abbr: '4JSS', desc: 'A infrastructure development and management company delivering large-scale civil engineering and construction projects.' },
-                    { name: 'SASACO', abbr: 'SASACO', desc: 'A strategic infrastructure holding company with interests in transport, logistics, and public-private partnerships.' }
-                ],
-                'Private Equity & Venture Capital': [
-                    { name: 'Ventaris Capital Partners', abbr: 'Ventaris', desc: 'A private equity and venture capital firm investing in high-growth businesses across technology, healthcare, and consumer sectors.' }
-                ],
-                'Travel & Hospitality': [
-                    { name: 'Luendo Travel', abbr: 'Luendo', desc: 'A premium travel and hospitality group offering curated travel experiences, luxury accommodation, and destination management services.' }
-                ],
-                'Financial Assets': [
-                    { name: 'Allan Gray', abbr: 'Allan Gray', desc: 'One of Africa's largest independent investment management firms, managing financial assets at fair value through profit and loss.' },
-                    { name: 'Coronation Fund Managers', abbr: 'Coronation', desc: 'A leading South African asset management firm specializing in long-term investment strategies and financial assets at FVTPL.' }
-                ]
-            };
+        // Stage 1: Logo appears (0ms)
+        setTimeout(() => {
+            seqLogo.classList.add('active');
+        }, 300);
 
-            // All companies for the hero mind map (8 companies)
-            const allCompanies = [
-                { name: 'Mkhize Property Fund', abbr: 'MPF', angle: -90 },
-                { name: 'Oregano Power & Energy', abbr: 'OPEG', angle: -45 },
-                { name: 'JSS Infrastructure', abbr: '4JSS', angle: 0 },
-                { name: 'SASACO', abbr: 'SASACO', angle: 45 },
-                { name: 'Ventaris Capital', abbr: 'Ventaris', angle: 90 },
-                { name: 'Luendo Travel', abbr: 'Luendo', angle: 135 },
-                { name: 'Allan Gray', abbr: 'Allan Gray', angle: 180 },
-                { name: 'Coronation', abbr: 'Coronation', angle: 225 }
-            ];
+        // Stage 2: Logo fades, mission appears (2200ms)
+        setTimeout(() => {
+            seqLogo.style.opacity = '0';
+            seqLogo.style.transition = 'opacity 0.8s ease';
+            seqMission.classList.add('active');
+        }, 2200);
 
-            const centerX = 400;
-            const centerY = 400;
-            const innerRadius = 300;
-            const branchLength = 90;
-            const nodeRadius = 42;
+        // Stage 3: Mission fades, industries assemble (4200ms)
+        setTimeout(() => {
+            seqMission.style.opacity = '0';
+            seqMission.style.transition = 'opacity 0.8s ease';
+            seqIndustries.classList.add('active');
+        }, 4200);
 
-            // Stars
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                const size = Math.random() * 1.5 + 0.5;
-                star.style.cssText = `
-                    width: ${size}px; height: ${size}px;
-                    left: ${Math.random() * 100}%; top: ${Math.random() * 100}%;
-                    --twinkle-duration: ${2 + Math.random() * 3}s;
-                    --twinkle-delay: ${Math.random() * 5}s;
-                    --max-opacity: ${Math.random() * 0.5 + 0.1};
-                `;
-                starfield.appendChild(star);
-            }
+        // Industries expand one by one
+        const industries = [
+            document.getElementById('seqInd1'),
+            document.getElementById('seqInd2'),
+            document.getElementById('seqInd3'),
+            document.getElementById('seqInd4')
+        ];
 
-            // Build hero SVG ecosystem
-            allCompanies.forEach((company, i) => {
-                const angleRad = (company.angle * Math.PI) / 180;
-                const xStart = centerX + innerRadius * Math.cos(angleRad);
-                const yStart = centerY + innerRadius * Math.sin(angleRad);
-                const branchEndDist = innerRadius + branchLength - nodeRadius;
-                const xEnd = centerX + branchEndDist * Math.cos(angleRad);
-                const yEnd = centerY + branchEndDist * Math.sin(angleRad);
-                const nodeX = centerX + (innerRadius + branchLength) * Math.cos(angleRad);
-                const nodeY = centerY + (innerRadius + branchLength) * Math.sin(angleRad);
+        industries.forEach((ind, i) => {
+            setTimeout(() => {
+                ind.classList.add('open');
+            }, 4800 + (i * 500));
+        });
 
-                const branch = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                branch.setAttribute('d', `M${xStart},${yStart} L${xEnd},${yEnd}`);
-                branch.setAttribute('class', 'branch');
-                branch.setAttribute('id', `branch-${i}`);
-                branchesG.appendChild(branch);
+        // Sequence completes (7800ms)
+        setTimeout(() => {
+            openingSequence.classList.add('complete');
+            mainSite.classList.add('visible');
+        }, 7800);
 
-                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                g.setAttribute('transform', `translate(${nodeX}, ${nodeY})`);
+        // ===== NAVBAR SCROLL =====
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+        });
 
-                const frame = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                frame.setAttribute('r', nodeRadius);
-                frame.setAttribute('class', 'node-frame');
-                frame.setAttribute('id', `node-frame-${i}`);
-                g.appendChild(frame);
-
-                const contentG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                contentG.setAttribute('class', 'node-content');
-                contentG.setAttribute('id', `node-content-${i}`);
-
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('class', 'node-text');
-                text.setAttribute('style', 'font-size: 14px;');
-                text.textContent = company.abbr;
-                contentG.appendChild(text);
-
-                g.appendChild(contentG);
-                nodesG.appendChild(g);
+        // ===== SCROLL REVEAL =====
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
             });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-            // Build Organogram
-            function buildOrganogram() {
-                const svg = organogramSvg;
-                const svgNS = 'http://www.w3.org/2000/svg';
-                const industryNames = Object.keys(industries);
-                const numIndustries = industryNames.length;
+        revealElements.forEach(el => revealObserver.observe(el));
 
-                // Center hub
-                const hub = document.createElementNS(svgNS, 'circle');
-                hub.setAttribute('cx', '500');
-                hub.setAttribute('cy', '80');
-                hub.setAttribute('r', '50');
-                hub.setAttribute('fill', 'none');
-                hub.setAttribute('stroke', '#c9a84c');
-                hub.setAttribute('stroke-width', '1');
-                hub.setAttribute('opacity', '0.6');
-                svg.appendChild(hub);
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
 
-                const hubText = document.createElementNS(svgNS, 'text');
-                hubText.setAttribute('x', '500');
-                hubText.setAttribute('y', '85');
-                hubText.setAttribute('text-anchor', 'middle');
-                hubText.setAttribute('fill', '#fff');
-                hubText.setAttribute('font-family', 'Cormorant Garamond, serif');
-                hubText.setAttribute('font-size', '14');
-                hubText.setAttribute('letter-spacing', '0.1em');
-                hubText.textContent = 'Santa Monica';
-                svg.appendChild(hubText);
+        // ===== COMPANY CARD EXPAND =====
+        document.querySelectorAll('.company-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Don't expand if clicking the discuss button
+                if (e.target.closest('.discuss-btn')) return;
 
-                // Industry nodes
-                const startX = 120;
-                const spacing = 155;
-                const industryY = 220;
-                const companyY = 380;
+                const isExpanded = this.classList.contains('expanded');
 
-                industryNames.forEach((industry, i) => {
-                    const x = startX + (i * spacing);
-
-                    // Branch from hub to industry
-                    const branch = document.createElementNS(svgNS, 'path');
-                    branch.setAttribute('d', `M500,130 Q${x},180 ${x},170`);
-                    branch.setAttribute('stroke', 'rgba(201,168,76,0.3)');
-                    branch.setAttribute('stroke-width', '1');
-                    branch.setAttribute('fill', 'none');
-                    svg.appendChild(branch);
-
-                    // Industry node
-                    const node = document.createElementNS(svgNS, 'rect');
-                    node.setAttribute('x', x - 60);
-                    node.setAttribute('y', industryY - 25);
-                    node.setAttribute('width', '120');
-                    node.setAttribute('height', '50');
-                    node.setAttribute('rx', '4');
-                    node.setAttribute('fill', '#080808');
-                    node.setAttribute('stroke', 'rgba(201,168,76,0.4)');
-                    node.setAttribute('stroke-width', '1');
-                    svg.appendChild(node);
-
-                    const industryText = document.createElementNS(svgNS, 'text');
-                    industryText.setAttribute('x', x);
-                    industryText.setAttribute('y', industryY + 5);
-                    industryText.setAttribute('text-anchor', 'middle');
-                    industryText.setAttribute('fill', '#c9a84c');
-                    industryText.setAttribute('font-family', 'Inter, sans-serif');
-                    industryText.setAttribute('font-size', '10');
-                    industryText.setAttribute('font-weight', '500');
-                    industryText.setAttribute('letter-spacing', '0.1em');
-                    industryText.textContent = industry;
-                    svg.appendChild(industryText);
-
-                    // Companies under this industry
-                    const companies = industries[industry];
-                    const compSpacing = 140;
-                    const totalWidth = (companies.length - 1) * compSpacing;
-                    const startCompX = x - (totalWidth / 2);
-
-                    companies.forEach((comp, j) => {
-                        const compX = startCompX + (j * compSpacing);
-
-                        // Branch from industry to company
-                        const compBranch = document.createElementNS(svgNS, 'path');
-                        compBranch.setAttribute('d', `M${x},${industryY + 25} Q${compX},${companyY - 40} ${compX},${companyY - 30}`);
-                        compBranch.setAttribute('stroke', 'rgba(201,168,76,0.2)');
-                        compBranch.setAttribute('stroke-width', '1');
-                        compBranch.setAttribute('fill', 'none');
-                        svg.appendChild(compBranch);
-
-                        // Company node
-                        const compNode = document.createElementNS(svgNS, 'rect');
-                        compNode.setAttribute('x', compX - 55);
-                        compNode.setAttribute('y', companyY - 20);
-                        compNode.setAttribute('width', '110');
-                        compNode.setAttribute('height', '40');
-                        compNode.setAttribute('rx', '3');
-                        compNode.setAttribute('fill', '#111111');
-                        compNode.setAttribute('stroke', 'rgba(201,168,76,0.25)');
-                        compNode.setAttribute('stroke-width', '1');
-                        svg.appendChild(compNode);
-
-                        const compText = document.createElementNS(svgNS, 'text');
-                        compText.setAttribute('x', compX);
-                        compText.setAttribute('y', companyY - 2);
-                        compText.setAttribute('text-anchor', 'middle');
-                        compText.setAttribute('fill', '#fff');
-                        compText.setAttribute('font-family', 'Inter, sans-serif');
-                        compText.setAttribute('font-size', '9');
-                        compText.setAttribute('opacity', '0.8');
-                        compText.textContent = comp.abbr;
-                        svg.appendChild(compText);
-                    });
-                });
-            }
-            buildOrganogram();
-
-            // Build Netflix-style rows
-            Object.entries(industries).forEach(([industry, companies]) => {
-                const row = document.createElement('div');
-                row.className = 'industry-row';
-
-                const header = document.createElement('div');
-                header.className = 'industry-header';
-                header.innerHTML = `
-                    <h3>${industry}</h3>
-                    <span class="count">${companies.length} compan${companies.length > 1 ? 'ies' : 'y'}</span>
-                    <div class="industry-line"></div>
-                `;
-                row.appendChild(header);
-
-                const cardsRow = document.createElement('div');
-                cardsRow.className = 'cards-row';
-
-                companies.forEach(company => {
-                    const card = document.createElement('div');
-                    card.className = 'company-card';
-                    card.innerHTML = `
-                        <div class="card-initial">${company.abbr}</div>
-                        <h3 class="card-title">${company.name}</h3>
-                        <div class="card-subtitle">${industry}</div>
-                        <p class="card-description">${company.desc}</p>
-                        <div class="card-tags">
-                            <span class="card-tag">${industry}</span>
-                        </div>
-                    `;
-                    cardsRow.appendChild(card);
+                // Close all other cards
+                document.querySelectorAll('.company-card.expanded').forEach(c => {
+                    if (c !== this) c.classList.remove('expanded');
                 });
 
-                row.appendChild(cardsRow);
-                portfolioRows.appendChild(row);
-            });
-
-            // Portfolio link smooth scroll
-            portfolioLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' });
-            });
-
-            // Animation
-            setTimeout(() => {
-                centerGroup.classList.add('visible');
-            }, 400);
-
-            setTimeout(() => {
-                mainCircle.style.animation = 'drawPath 1.5s ease forwards';
-            }, 1200);
-
-            allCompanies.forEach((_, i) => {
-                const startTime = 2200 + (i * 400);
-                setTimeout(() => {
-                    const branch = document.getElementById(`branch-${i}`);
-                    branch.style.transition = 'stroke-dashoffset 0.6s ease-out';
-                    branch.style.strokeDashoffset = '0';
-                    setTimeout(() => {
-                        document.getElementById(`node-frame-${i}`).style.opacity = '1';
-                        document.getElementById(`node-content-${i}`).style.opacity = '1';
-                    }, 400);
-                }, startTime);
-            });
-
-            const endScene = 2200 + (allCompanies.length * 400);
-            setTimeout(() => {
-                rotatingLight.classList.add('active');
-                scrollDown.classList.add('visible');
-            }, endScene + 300);
-
-            setTimeout(() => {
-                navbar.classList.add('visible');
-                mainContent.classList.add('visible');
-                document.body.style.overflowY = 'auto';
-            }, endScene + 1500);
-
-            document.body.style.overflow = 'hidden';
-
-            scrollDown.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' });
+                // Toggle current
+                this.classList.toggle('expanded', !isExpanded);
             });
         });
     </script>
