@@ -9,24 +9,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --black: #0a0a0a;
-            --charcoal: #111111;
-            --charcoal-light: #1a1a1a;
-            --gold: #b8985a;
-            --gold-dim: rgba(184, 152, 90, 0.3);
-            --gold-faint: rgba(184, 152, 90, 0.08);
-            --gold-brighter: rgba(184, 152, 90, 0.6);
-            --silver: #c0c0c0;
-            --silver-dim: rgba(192, 192, 192, 0.4);
-            --white: #f5f5f5;
-            --white-dim: rgba(245, 245, 245, 0.55);
-            --white-faint: rgba(245, 245, 245, 0.15);
-            --slate: #666666;
+            --black: #000000;
+            --charcoal: #080808;
+            --charcoal-light: #111111;
+            --gold: #c9a84c;
+            --gold-dim: rgba(201, 168, 76, 0.4);
+            --gold-faint: rgba(201, 168, 76, 0.1);
+            --gold-bright: rgba(201, 168, 76, 0.9);
+            --white: #ffffff;
+            --white-dim: rgba(255, 255, 255, 0.7);
+            --slate: #888888;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
 
         body {
             background-color: var(--black);
@@ -34,16 +29,41 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            line-height: 1.6;
         }
 
-        .bg-layer {
+        /* ===== STARFIELD ===== */
+        .starfield {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 0;
             pointer-events: none;
-            background: var(--black);
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+            animation-delay: var(--twinkle-delay);
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: var(--max-opacity); transform: scale(1); }
+        }
+        .nebula {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
+            animation: nebulaDrift 20s ease-in-out infinite alternate;
+        }
+        @keyframes nebulaDrift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -20px) scale(1.1); }
         }
 
         /* ===== NAVIGATION ===== */
@@ -51,787 +71,528 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 1000;
-            padding: 28px 60px;
+            padding: 24px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
             opacity: 0;
-            transition: opacity 2s ease;
+            animation: fadeInNav 1s ease 7s forwards;
         }
-        nav.visible { opacity: 1; }
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
+        @keyframes fadeInNav {
+            to { opacity: 1; }
         }
-        .nav-logo .logo-emblem {
-            height: 38px;
-            width: auto;
-            display: block;
-            /* Silver monogram blends with dark background via mix-blend-mode */
-            mix-blend-mode: screen;
-            opacity: 0.85;
-            transition: opacity 0.4s ease, filter 0.4s ease;
-            filter: drop-shadow(0 0 8px rgba(184, 152, 90, 0.15));
-        }
-        .nav-logo:hover .logo-emblem {
-            opacity: 1;
-            filter: drop-shadow(0 0 12px rgba(184, 152, 90, 0.35));
-        }
+        .nav-logo { display: flex; align-items: center; }
         .nav-logo-text {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            font-weight: 400;
-            letter-spacing: 0.25em;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--white);
+            text-decoration: none;
         }
         .nav-links {
             display: flex;
-            gap: 42px;
+            gap: 45px;
             list-style: none;
         }
         .nav-links a {
             text-decoration: none;
             color: var(--white-dim);
-            font-size: 0.65rem;
-            font-weight: 400;
-            letter-spacing: 0.2em;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
-            transition: color 0.5s ease;
-            position: relative;
+            transition: color 0.4s ease;
         }
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--gold);
-            transition: width 0.4s ease;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--white);
-        }
-        .nav-links a:hover::after, .nav-links a.active::after {
-            width: 100%;
-        }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
 
         /* ===== HERO ===== */
         .hero {
             position: relative;
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: var(--black);
             overflow: hidden;
-            padding-top: 100px;
-            padding-bottom: 80px;
+            padding-top: 80px;
         }
 
         .ecosystem-svg {
+            position: absolute;
             width: 85vmin;
             height: 85vmin;
             max-width: 900px;
             max-height: 900px;
+            pointer-events: none;
             overflow: visible;
-            transition: transform 4s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .ecosystem-svg.settled {
-            transform: scale(0.88);
         }
 
-        /* ===== CENTER EMBLEM - THE CORE ===== */
-        .center-emblem {
+        /* ===== CENTER GROUP ===== */
+        .center-group {
             opacity: 0;
-            transform-origin: 400px 360px;
-            animation: emblemIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+            animation: centerFadeIn 1s ease-out forwards;
         }
-        @keyframes emblemIn {
-            0% { opacity: 0; transform: scale(0.96); }
-            100% { opacity: 1; transform: scale(1); }
+        @keyframes centerFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
-
-        /* The core emblem - silver monogram with gold harmony */
-        .core-emblem {
-            /* Subtle gold aura behind the silver monogram */
-            filter: drop-shadow(0 0 15px rgba(184, 152, 90, 0.2)) 
-                    drop-shadow(0 0 30px rgba(184, 152, 90, 0.08));
+        .center-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            fill: var(--white);
+            text-anchor: middle;
+        }
+        .center-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            fill: var(--gold-dim);
+            text-anchor: middle;
+        }
+        .center-diamond {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 1.5;
             opacity: 0;
-            animation: coreReveal 2s ease-out 1.2s forwards;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: drawDiamond 0.8s ease-out 0.5s forwards;
         }
-        @keyframes coreReveal {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 0.9; transform: scale(1); }
+        @keyframes drawDiamond {
+            0% { opacity: 0; stroke-dashoffset: 200; }
+            20% { opacity: 0.8; }
+            100% { opacity: 0.8; stroke-dashoffset: 0; }
+        }
+        .center-dot {
+            fill: var(--gold);
+            opacity: 0;
+            animation: fadeInDot 0.4s ease-out 1.2s forwards;
+        }
+        @keyframes fadeInDot {
+            from { opacity: 0; transform: scale(0); }
+            to { opacity: 0.6; transform: scale(1); }
         }
 
-        /* Gold ring that draws around the emblem - the "core boundary" */
-        .core-ring {
+        /* ===== MAIN CIRCLE ===== */
+        .main-circle {
             fill: none;
             stroke: var(--gold);
             stroke-width: 1;
             opacity: 0;
-            stroke-dasharray: 377;
-            stroke-dashoffset: 377;
-            animation: drawCoreRing 1.5s ease-out 2.5s forwards;
-            filter: drop-shadow(0 0 6px var(--gold-dim));
-        }
-        @keyframes drawCoreRing {
-            to { stroke-dashoffset: 0; opacity: 0.5; }
-        }
-
-        /* Inner gold glow ring - pulses gently */
-        .core-glow-ring {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 2;
-            opacity: 0;
-            filter: blur(4px) drop-shadow(0 0 8px var(--gold-dim));
-            animation: coreGlowFade 2s ease-out 3s forwards, coreGlowPulse 4s ease-in-out 5s infinite;
-        }
-        @keyframes coreGlowFade {
-            to { opacity: 0.15; }
-        }
-        @keyframes coreGlowPulse {
-            0%, 100% { opacity: 0.1; }
-            50% { opacity: 0.25; }
-        }
-
-        .center-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 20px;
-            font-weight: 400;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            fill: var(--white);
-            text-anchor: middle;
-            opacity: 0;
-            animation: textIn 1.2s ease-out 3.2s forwards;
-        }
-        .center-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 9px;
-            font-weight: 400;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            fill: var(--white-dim);
-            text-anchor: middle;
-            opacity: 0;
-            animation: textIn 1.2s ease-out 3.6s forwards;
-        }
-        @keyframes textIn {
-            to { opacity: 1; }
-        }
-
-        /* ===== STAGE 2: ECOSYSTEM CIRCLE ===== */
-        .ecosystem-circle {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1.2;
-            opacity: 0;
-            stroke-dasharray: 1696;
-            stroke-dashoffset: 1696;
-            animation: drawCircle 2.5s cubic-bezier(0.4, 0, 0.2, 1) 4s forwards;
-            transform-origin: 400px 400px;
-            filter: drop-shadow(0 0 6px var(--gold-dim));
+            stroke-dasharray: 1885;
+            stroke-dashoffset: 1885;
+            animation: drawCircle 1.5s ease-out 0.8s forwards;
         }
         @keyframes drawCircle {
-            0% { opacity: 0; stroke-dashoffset: 1696; }
-            5% { opacity: 0.75; }
-            100% { opacity: 0.75; stroke-dashoffset: 0; }
+            0% { opacity: 0; stroke-dashoffset: 1885; }
+            10% { opacity: 0.4; }
+            100% { opacity: 0.4; stroke-dashoffset: 0; }
         }
 
-        /* ===== STAGE 3: BRANCHES ===== */
+        /* ===== BRANCHES ===== */
         .branch {
             fill: none;
             stroke: var(--gold);
-            stroke-width: 1.0;
+            stroke-width: 1;
             opacity: 0;
             stroke-dasharray: var(--branch-length);
             stroke-dashoffset: var(--branch-length);
-            animation: drawBranch 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            filter: drop-shadow(0 0 4px var(--gold-dim));
+            animation: drawBranch 0.6s ease-out forwards;
         }
         @keyframes drawBranch {
             0% { opacity: 0; stroke-dashoffset: var(--branch-length); }
-            10% { opacity: 0.65; }
-            100% { opacity: 0.65; stroke-dashoffset: 0; }
+            20% { opacity: 0.4; }
+            100% { opacity: 0.4; stroke-dashoffset: 0; }
         }
 
-        /* ===== STAGE 4: INDUSTRY NODES ===== */
+        /* ===== NODES ===== */
         .node-group {
             opacity: 0;
-        }
-        @keyframes nodeAppear {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            /* No transform here - handled by child elements */
         }
         .node-scale {
             transform: scale(0);
             transform-origin: center;
-            animation: nodeScaleIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: nodeScaleIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
         @keyframes nodeScaleIn {
             0% { transform: scale(0); }
             100% { transform: scale(1); }
         }
-        .node-ring {
-            fill: none;
+        .node-frame {
+            fill: var(--black);
             stroke: var(--gold);
-            stroke-width: 1.0;
+            stroke-width: 1;
             opacity: 0;
-            stroke-dasharray: 377;
-            stroke-dashoffset: 377;
-            animation: drawNodeRing 0.8s ease-out forwards;
-            filter: drop-shadow(0 0 5px var(--gold-dim));
+            stroke-dasharray: 264;
+            stroke-dashoffset: 264;
+            animation: drawNodeFrame 0.5s ease-out forwards;
         }
-        @keyframes drawNodeRing {
-            0% { opacity: 0; stroke-dashoffset: 377; }
-            20% { opacity: 0.8; }
-            100% { opacity: 0.8; stroke-dashoffset: 0; }
+        @keyframes drawNodeFrame {
+            0% { opacity: 0; stroke-dashoffset: 264; }
+            20% { opacity: 1; }
+            100% { opacity: 1; stroke-dashoffset: 0; }
         }
-        .node-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 8px;
-            font-weight: 500;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
+        .node-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 300;
             fill: var(--white);
             text-anchor: middle;
+            dominant-baseline: middle;
+            letter-spacing: 0.05em;
             opacity: 0;
-            animation: labelIn 0.6s ease-out forwards;
-        }
-        @keyframes labelIn {
-            to { opacity: 1; }
+            animation: fadeInText 0.3s ease-out forwards;
         }
         @keyframes fadeInText {
             to { opacity: 1; }
         }
 
-        /* ===== STAGE 5: BREATHING ANIMATION ===== */
-        .breath-ring {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-dasharray: 40, 1656;
-            stroke-dashoffset: 0;
+        /* ===== THE SINGLE TRAVELING LIGHT ===== */
+        .traveling-light {
+            fill: var(--gold);
+            filter: blur(1px);
             opacity: 0;
-            filter: blur(1px) drop-shadow(0 0 8px var(--gold-dim));
-            transform-origin: 400px 400px;
-            animation: 
-                breathFadeIn 3s ease-out forwards,
-                breathe 8s ease-in-out infinite;
         }
-        @keyframes breathFadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.45; }
+        .traveling-light.active {
+            animation: lightTravel var(--travel-duration) ease-in-out forwards;
         }
-        @keyframes breathe {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.55; }
+        @keyframes lightTravel {
+            0% { opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
-        .flow-line {
+        /* Light trail glow */
+        .light-glow {
+            fill: var(--gold);
+            opacity: 0;
+            filter: blur(4px);
+        }
+        .light-glow.active {
+            animation: glowTravel var(--travel-duration) ease-in-out forwards;
+        }
+        @keyframes glowTravel {
+            0% { opacity: 0; }
+            5% { opacity: 0.5; }
+            95% { opacity: 0.5; }
+            100% { opacity: 0; }
+        }
+
+        /* ===== NODE ACTIVATION FLASH ===== */
+        .node-flash {
             fill: none;
             stroke: var(--gold);
-            stroke-width: 1.5;
+            stroke-width: 2;
             opacity: 0;
-            stroke-dasharray: 8, 1688;
+            transform-origin: center;
+        }
+        .node-flash.active {
+            animation: nodeFlash 0.6s ease-out forwards;
+        }
+        @keyframes nodeFlash {
+            0% { opacity: 0.8; transform: scale(0.8); }
+            50% { opacity: 0.4; }
+            100% { opacity: 0; transform: scale(1.8); }
+        }
+
+        /* ===== SETTLED ROTATING LIGHT (after animation) ===== */
+        .settled-rotating-light {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-dasharray: 80, 1805;
             stroke-dashoffset: 0;
+            opacity: 0;
+            filter: blur(1px);
             transform-origin: 400px 400px;
-            animation: flowFadeIn 3s ease-out forwards, flowDrift 20s linear infinite;
-            filter: drop-shadow(0 0 6px var(--gold-dim));
+            animation: 
+                fadeInLight 1s ease-out 6.5s forwards,
+                rotateLight 10s linear 7s infinite;
         }
-        @keyframes flowFadeIn {
+        @keyframes fadeInLight {
             from { opacity: 0; }
-            to { opacity: 0.35; }
+            to { opacity: 0.6; }
         }
-        @keyframes flowDrift {
+        @keyframes rotateLight {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
-        /* ===== SCROLL INDICATOR ===== */
-        .scroll-hint {
+        /* ===== SCROLL DOWN ===== */
+        .scroll-down {
             position: absolute;
-            bottom: 50px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 20;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            opacity: 0;
-            transition: opacity 2s ease;
-            text-decoration: none;
+            gap: 8px;
             cursor: pointer;
+            text-decoration: none;
+            opacity: 0;
+            animation: fadeInScroll 1s ease 7.5s forwards;
         }
-        .scroll-hint.visible { opacity: 1; }
-        .scroll-hint span {
-            font-size: 0.5rem;
-            letter-spacing: 0.5em;
+        @keyframes fadeInScroll {
+            to { opacity: 1; }
+        }
+        .scroll-down span {
+            font-size: 0.55rem;
+            letter-spacing: 0.4em;
             text-transform: uppercase;
-            color: var(--white-dim);
-            font-weight: 400;
+            color: var(--gold-dim);
         }
-        .scroll-line {
-            width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, var(--gold-dim), transparent);
-            animation: scrollPulse 3s ease-in-out infinite;
+        .scroll-arrow {
+            width: 18px;
+            height: 18px;
+            border-right: 1px solid var(--gold-dim);
+            border-bottom: 1px solid var(--gold-dim);
+            transform: rotate(45deg);
+            animation: bounceArrow 2s ease-in-out infinite;
         }
-        @keyframes scrollPulse {
-            0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
-            50% { opacity: 0.7; transform: scaleY(1); }
+        @keyframes bounceArrow {
+            0%, 100% { transform: rotate(45deg) translate(0, 0); }
+            50% { transform: rotate(45deg) translate(4px, 4px); }
         }
 
         /* ===== CONTENT ===== */
-        .content {
-            position: relative;
-            z-index: 10;
-            background: linear-gradient(to bottom, rgba(10,10,10,0) 0%, var(--black) 150px);
-        }
-
-        .industries-section {
-            padding: 120px 60px 80px;
-            max-width: 1400px;
+        .portfolio {
+            padding: 140px 50px 100px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         .section-header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 70px;
         }
-        .section-eyebrow {
+        .section-label {
             font-size: 0.6rem;
             letter-spacing: 0.5em;
             text-transform: uppercase;
             color: var(--gold);
             display: block;
-            margin-bottom: 20px;
-            font-weight: 500;
+            margin-bottom: 18px;
+            font-weight: 600;
         }
         .section-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.8rem;
             font-weight: 300;
             letter-spacing: 0.02em;
-            color: var(--white);
         }
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: var(--white-dim);
-            margin-top: 16px;
-            font-weight: 300;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.8;
-        }
-
-        .industries-grid {
+        .portfolio-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--charcoal-light);
-            border: 1px solid var(--charcoal-light);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
         }
-        @media (max-width: 1100px) {
-            .industries-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 700px) {
-            .industries-grid { grid-template-columns: 1fr; }
-        }
-
-        .industry-card {
-            background: var(--black);
-            padding: 50px 40px;
+        .portfolio-card {
+            background: var(--charcoal);
+            border: 1px solid var(--gold-faint);
+            border-radius: 6px;
+            padding: 45px 35px;
             transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-            overflow: hidden;
-            text-align: center;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            border: 1px solid rgba(184, 152, 90, 0.15);
+            align-items: flex-start;
+            text-decoration: none;
+            color: inherit;
         }
-        .industry-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 1px;
-            background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
-            opacity: 0;
-            transition: opacity 0.5s ease;
+        .portfolio-card:hover {
+            border-color: var(--gold-dim);
+            background: var(--charcoal-light);
+            transform: translateY(-4px);
         }
-        .industry-card:hover::before {
-            opacity: 1;
-        }
-        .industry-card:hover {
-            background: var(--charcoal);
-            border-color: rgba(184, 152, 90, 0.3);
-        }
-        .industry-icon-wrap {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 1px solid var(--gold-dim);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 28px;
-            background: rgba(184, 152, 90, 0.03);
-            transition: all 0.4s ease;
-        }
-        .industry-card:hover .industry-icon-wrap {
-            border-color: var(--gold);
-            background: rgba(184, 152, 90, 0.08);
-            transform: scale(1.05);
-        }
-        .industry-icon-wrap svg {
-            width: 36px;
-            height: 36px;
-            fill: var(--white);
-            opacity: 0.9;
-        }
-        .industry-title {
+        .card-initial {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 400;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            color: var(--white);
-        }
-        .industry-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 500;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
+            font-size: 2.5rem;
+            font-weight: 300;
             color: var(--gold);
-            margin-bottom: 32px;
+            margin-bottom: 20px;
+            line-height: 1;
         }
-        .industry-arrow {
-            font-size: 1.2rem;
-            color: var(--gold-dim);
-            transition: all 0.3s ease;
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 14px;
+            letter-spacing: 0.03em;
+        }
+        .card-description {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--white-dim);
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-top: auto;
         }
-        .industry-card:hover .industry-arrow {
-            color: var(--gold);
-            transform: translateX(4px);
-        }
-
-        .site-footer {
-            padding: 80px 60px 40px;
-            border-top: 1px solid rgba(255,255,255,0.04);
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 60px;
-        }
-        @media (max-width: 900px) {
-            .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
-        }
-        .footer-logo-img {
-            height: 55px;
-            width: auto;
-            margin-bottom: 20px;
-            opacity: 0.85;
-            transition: opacity 0.3s ease;
-            /* Full logo on dark background - blend elegantly */
-            mix-blend-mode: screen;
-            filter: drop-shadow(0 0 10px rgba(184, 152, 90, 0.1));
-        }
-        .footer-logo-img:hover {
-            opacity: 1;
-            filter: drop-shadow(0 0 15px rgba(184, 152, 90, 0.2));
-        }
-        .footer-tagline {
-            font-size: 0.8rem;
-            color: var(--white-dim);
-            line-height: 1.7;
-            font-weight: 300;
-            max-width: 300px;
-        }
-        .footer-heading {
-            font-size: 0.6rem;
-            letter-spacing: 0.25em;
+        .card-tag {
+            font-size: 0.55rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--gold);
-            margin-bottom: 20px;
-            font-weight: 500;
+            border: 1px solid var(--gold-faint);
+            padding: 5px 10px;
+            border-radius: 2px;
         }
-        .footer-links {
-            list-style: none;
-        }
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-        .footer-links a {
-            text-decoration: none;
-            color: var(--white-dim);
-            font-size: 0.8rem;
-            font-weight: 300;
-            transition: color 0.3s ease;
-        }
-        .footer-links a:hover {
-            color: var(--white);
-        }
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.04);
-        }
-        .footer-copyright {
-            font-size: 0.65rem;
+
+        footer {
+            padding: 60px 50px;
+            border-top: 1px solid var(--charcoal-light);
+            text-align: center;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
             color: var(--slate);
-            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
-        .footer-legal {
-            display: flex;
-            gap: 30px;
-        }
-        .footer-legal a {
-            font-size: 0.65rem;
-            color: var(--slate);
-            text-decoration: none;
-            letter-spacing: 0.1em;
-            transition: color 0.3s ease;
-        }
-        .footer-legal a:hover {
-            color: var(--white-dim);
+
+        @media (max-width: 900px) {
+            nav { padding: 20px 30px; }
+            .nav-links { display: none; }
+            .section-title { font-size: 2.2rem; }
+            .portfolio { padding: 80px 30px; }
+            .ecosystem-svg { width: 95vmin; height: 95vmin; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-layer"></div>
+    <div class="starfield" id="starfield"></div>
+    <div class="nebula" style="width: 500px; height: 500px; background: radial-gradient(circle, rgba(100,80,150,0.3) 0%, transparent 70%); top: 10%; left: -10%;"></div>
+    <div class="nebula" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(80,100,120,0.3) 0%, transparent 70%); bottom: 20%; right: -5%; animation-delay: -5s;"></div>
 
-    <!-- NAVIGATION - Silver monogram with gold glow -->
     <nav id="navbar">
-        <a href="#" class="nav-logo">
-            <img src="data:image/png;base64,{EMBLEM_B64}" alt="SM" class="logo-emblem">
-            <span class="nav-logo-text">Santa Monica</span>
+        <a href="index.html" class="nav-logo">
+            <span class="nav-logo-text">SM</span>
         </a>
         <ul class="nav-links">
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#companies">Our Companies</a></li>
-            <li><a href="#industries">Industries</a></li>
-            <li><a href="#investors">Investor Relations</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="#portfolio" id="portfolioLink">Portfolio</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
         </ul>
+        <div style="width: 120px;"></div>
     </nav>
 
     <main>
         <section class="hero" id="hero">
             <svg class="ecosystem-svg" viewBox="0 0 800 800" id="ecosystemSvg">
+                <!-- Main circle -->
+                <circle cx="400" cy="400" r="300" class="main-circle" id="mainCircle" />
 
-                <circle cx="400" cy="400" r="270" class="ecosystem-circle" />
-                <circle cx="400" cy="400" r="270" class="breath-ring" />
-                <circle cx="400" cy="400" r="270" class="flow-line" />
+                <!-- Settled rotating light (appears after animation) -->
+                <circle cx="400" cy="400" r="300" class="settled-rotating-light" id="settledRotatingLight" />
 
+                <!-- Branches group -->
                 <g id="branchesG"></g>
+
+                <!-- Nodes group -->
                 <g id="nodesG"></g>
 
-                <!-- ===== CENTER CORE - THE SILVER EMBLEM ===== -->
-                <g class="center-emblem">
-                    <!-- Gold glow ring behind the emblem -->
-                    <circle cx="400" cy="360" r="60" class="core-glow-ring" />
-                    
-                    <!-- Gold ring that draws around the core -->
-                    <circle cx="400" cy="360" r="55" class="core-ring" />
-                    
-                    <!-- The silver monogram - the heart of the ecosystem -->
-                    <image href="data:image/png;base64,{EMBLEM_B64}" 
-                           x="345" y="305" width="110" height="110" 
-                           class="core-emblem" 
-                           style="mix-blend-mode: screen;" />
-                    
-                    <!-- Company name below -->
-                    <text x="400" y="460" class="center-name">Santa Monica</text>
-                    <text x="400" y="485" class="center-subtitle">Strategic Investment Holding</text>
+                <!-- Traveling light path (invisible) -->
+                <path id="travelPath" style="display:none;" />
+
+                <!-- Traveling light particle -->
+                <g id="travelingLightG">
+                    <circle r="5" class="light-glow" id="lightGlow" />
+                    <circle r="2.5" class="traveling-light" id="travelingLight" />
+                </g>
+
+                <!-- Node flash effects -->
+                <g id="nodeFlashesG"></g>
+
+                <!-- Center group -->
+                <g class="center-group" id="centerGroup">
+                    <polygon points="400,360 420,395 400,430 380,395" fill="none" class="center-diamond" id="centerDiamond"/>
+                    <circle cx="400" cy="395" r="8" class="center-dot" id="centerDot"/>
+                    <text x="400" y="460" class="center-name" id="centerName">Santa Monica Group</text>
+                    <text x="400" y="480" class="center-subtitle" id="centerSubtitle">Investment Holding</text>
                 </g>
             </svg>
 
-            <a href="#companies" class="scroll-hint" id="scrollHint">
-                <span>Discover</span>
-                <div class="scroll-line"></div>
+            <a href="#portfolio" class="scroll-down" id="scrollDown">
+                <span>Explore</span>
+                <div class="scroll-arrow"></div>
             </a>
         </section>
 
-        <div class="content">
-            <section class="industries-section" id="companies">
+        <div class="portfolio" id="mainContent">
+            <section id="portfolio">
                 <div class="section-header">
-                    <span class="section-eyebrow">Our Ecosystem</span>
-                    <h2 class="section-title">Industries & Companies</h2>
-                    <p class="section-subtitle">A diversified portfolio of strategic investments across key sectors, each contributing to long-term value creation.</p>
+                    <span class="section-label">Investment Ecosystem</span>
+                    <h2 class="section-title">Strategic Portfolio</h2>
                 </div>
-
-                <div class="industries-grid">
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M-8,-12 L-8,12 L8,12 L8,-12 L0,-18 Z M-5,-2 L-5,2 L-2,2 L-2,-2 Z M2,-2 L2,2 L5,2 L5,-2 Z M-5,5 L-5,9 L-2,9 L-2,5 Z M2,5 L2,9 L5,9 L5,5 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Property</h3>
-                        <span class="industry-subtitle">Investments</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M2,-14 L-6,-14 L-2,0 L-8,0 L4,14 L0,2 L6,2 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Energy</h3>
-                        <span class="industry-subtitle">Investments</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M-14,4 L-14,8 L-10,8 L-10,4 L-6,4 L-6,8 L-2,8 L-2,4 L2,4 L2,8 L6,8 L6,4 L10,4 L10,8 L14,8 L14,4 L14,0 L-14,0 Z M-14,-4 L14,-4 L14,-8 L-14,-8 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Infrastructure</h3>
-                        <span class="industry-subtitle">Investments</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M0,-12 L2,-12 L3,-8 L5,-7 L8,-10 L10,-8 L7,-5 L8,-3 L12,-2 L12,0 L8,1 L7,3 L10,6 L8,8 L5,5 L3,6 L2,10 L0,10 L-1,6 L-3,5 L-6,8 L-8,6 L-5,3 L-6,1 L-10,0 L-10,-2 L-6,-3 L-5,-5 L-8,-8 L-6,-10 L-3,-7 L-1,-8 Z M0,-4 A4,4 0 0,1 0,4 A4,4 0 0,1 0,-4" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Industrial</h3>
-                        <span class="industry-subtitle">& Engineering</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M-14,2 L-8,2 L-4,-2 L-4,-6 L0,-8 L4,-6 L4,-2 L8,2 L14,2 L14,4 L8,4 L4,8 L4,12 L0,14 L-4,12 L-4,8 L-8,4 L-14,4 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Travel</h3>
-                        <span class="industry-subtitle">& Hospitality</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M-12,8 L-12,-8 L-10,-8 L-10,8 Z M-6,8 L-6,-4 L-4,-4 L-4,8 Z M0,8 L0,-12 L2,-12 L2,8 Z M6,8 L6,0 L8,0 L8,8 Z M-12,-6 L-2,-12 L8,-2 L12,-8 L12,-6 L8,0 L-2,-10 L-12,-4 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Private Equity</h3>
-                        <span class="industry-subtitle">& Venture Capital</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                </div>
+                <div class="portfolio-grid" id="portfolioGrid"></div>
             </section>
-
-            <!-- FOOTER - Full lockup with silver-on-dark elegance -->
-            <footer class="site-footer">
-                <div class="footer-grid">
-                    <div>
-                        <img src="data:image/png;base64,{FULL_LOGO_B64}" alt="Santa Monica Group" class="footer-logo-img">
-                        <p class="footer-tagline">A strategic investment holding company building long-term value through diversified sector expertise.</p>
-                    </div>
-                    <div>
-                        <div class="footer-heading">Navigation</div>
-                        <ul class="footer-links">
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#about">About</a></li>
-                            <li><a href="#companies">Our Companies</a></li>
-                            <li><a href="#industries">Industries</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <div class="footer-heading">Investors</div>
-                        <ul class="footer-links">
-                            <li><a href="#">Annual Reports</a></li>
-                            <li><a href="#">Share Information</a></li>
-                            <li><a href="#">Governance</a></li>
-                            <li><a href="#">News</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <div class="footer-heading">Contact</div>
-                        <ul class="footer-links">
-                            <li><a href="#">General Enquiries</a></li>
-                            <li><a href="#">Media</a></li>
-                            <li><a href="#">Investor Relations</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <span class="footer-copyright">© 2025 Santa Monica Group. All rights reserved.</span>
-                    <div class="footer-legal">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Use</a>
-                    </div>
-                </div>
+            <footer>
+                &copy; 2025 Santa Monica Group. Refined Excellence in Investment.
             </footer>
         </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const navbar = document.getElementById('navbar');
-            const ecosystemSvg = document.getElementById('ecosystemSvg');
-            const scrollHint = document.getElementById('scrollHint');
+            const starfield = document.getElementById('starfield');
+            const portfolioGrid = document.getElementById('portfolioGrid');
+            const portfolioLink = document.getElementById('portfolioLink');
+            const scrollDown = document.getElementById('scrollDown');
             const branchesG = document.getElementById('branchesG');
             const nodesG = document.getElementById('nodesG');
+            const travelPath = document.getElementById('travelPath');
+            const travelingLight = document.getElementById('travelingLight');
+            const lightGlow = document.getElementById('lightGlow');
+            const nodeFlashesG = document.getElementById('nodeFlashesG');
 
-            const industries = [
-                { 
-                    name: 'Property', 
-                    angle: -90,
-                    symbol: 'building',
-                    symbolPath: 'M-8,-12 L-8,12 L8,12 L8,-12 L0,-18 Z M-5,-2 L-5,2 L-2,2 L-2,-2 Z M2,-2 L2,2 L5,2 L5,-2 Z M-5,5 L-5,9 L-2,9 L-2,5 Z M2,5 L2,9 L5,9 L5,5 Z'
-                },
-                { 
-                    name: 'Energy', 
-                    angle: -30,
-                    symbol: 'bolt',
-                    symbolPath: 'M2,-14 L-6,-14 L-2,0 L-8,0 L4,14 L0,2 L6,2 Z'
-                },
-                { 
-                    name: 'Infrastructure', 
-                    angle: 30,
-                    symbol: 'bridge',
-                    symbolPath: 'M-14,4 L-14,8 L-10,8 L-10,4 L-6,4 L-6,8 L-2,8 L-2,4 L2,4 L2,8 L6,8 L6,4 L10,4 L10,8 L14,8 L14,4 L14,0 L-14,0 Z M-14,-4 L14,-4 L14,-8 L-14,-8 Z'
-                },
-                { 
-                    name: 'Industrial', 
-                    angle: 90,
-                    symbol: 'gear',
-                    symbolPath: 'M0,-12 L2,-12 L3,-8 L5,-7 L8,-10 L10,-8 L7,-5 L8,-3 L12,-2 L12,0 L8,1 L7,3 L10,6 L8,8 L5,5 L3,6 L2,10 L0,10 L-1,6 L-3,5 L-6,8 L-8,6 L-5,3 L-6,1 L-10,0 L-10,-2 L-6,-3 L-5,-5 L-8,-8 L-6,-10 L-3,-7 L-1,-8 Z M0,-4 A4,4 0 0,1 0,4 A4,4 0 0,1 0,-4'
-                },
-                { 
-                    name: 'Travel', 
-                    angle: 150,
-                    symbol: 'plane',
-                    symbolPath: 'M-14,2 L-8,2 L-4,-2 L-4,-6 L0,-8 L4,-6 L4,-2 L8,2 L14,2 L14,4 L8,4 L4,8 L4,12 L0,14 L-4,12 L-4,8 L-8,4 L-14,4 Z'
-                },
-                { 
-                    name: 'Private Equity', 
-                    angle: 210,
-                    symbol: 'chart',
-                    symbolPath: 'M-12,8 L-12,-8 L-10,-8 L-10,8 Z M-6,8 L-6,-4 L-4,-4 L-4,8 Z M0,8 L0,-12 L2,-12 L2,8 Z M6,8 L6,0 L8,0 L8,8 Z M-12,-6 L-2,-12 L8,-2 L12,-8 L12,-6 L8,0 L-2,-10 L-12,-4 Z'
-                }
+            // 4 companies (cardinal directions matching the screenshot)
+            const companies = [
+                { name: 'Aurum Capital', initial: 'A', angle: -90, tags: ['Private Equity', 'Venture Capital'], desc: 'A premier private equity firm specializing in growth-stage investments across technology and healthcare sectors.' },
+                { name: 'Veridian Holdings', initial: 'V', angle: 0, tags: ['Real Estate', 'Infrastructure'], desc: 'A leading real estate and infrastructure investment platform with assets across commercial and residential portfolios.' },
+                { name: 'Meridian Partners', initial: 'M', angle: 90, tags: ['Financial', 'Banking'], desc: 'A strategic financial services investor with deep expertise in banking, insurance, and asset management.' },
+                { name: 'Crestwood Group', initial: 'C', angle: 180, tags: ['Energy', 'Resources'], desc: 'A diversified energy and natural resources investment vehicle focused on sustainable and renewable assets.' }
             ];
 
             const centerX = 400;
             const centerY = 400;
-            const innerRadius = 270;
+            const innerRadius = 300;
             const branchLength = 90;
-            const nodeRadius = 50;
+            const nodeRadius = 42;
 
-            industries.forEach((industry, i) => {
-                const angleRad = (industry.angle * Math.PI) / 180;
+            // Stars
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 1.5 + 0.5;
+                star.style.cssText = `
+                    width: ${size}px; height: ${size}px;
+                    left: ${Math.random() * 100}%; top: ${Math.random() * 100}%;
+                    --twinkle-duration: ${2 + Math.random() * 3}s;
+                    --twinkle-delay: ${Math.random() * 5}s;
+                    --max-opacity: ${Math.random() * 0.5 + 0.1};
+                `;
+                starfield.appendChild(star);
+            }
+
+            // Build branches and nodes with staggered animations
+            const nodePositions = [];
+
+            companies.forEach((company, i) => {
+                const angleRad = (company.angle * Math.PI) / 180;
                 const xStart = centerX + innerRadius * Math.cos(angleRad);
                 const yStart = centerY + innerRadius * Math.sin(angleRad);
                 const branchEndDist = innerRadius + branchLength - nodeRadius;
@@ -840,71 +601,141 @@
                 const nodeX = centerX + (innerRadius + branchLength) * Math.cos(angleRad);
                 const nodeY = centerY + (innerRadius + branchLength) * Math.sin(angleRad);
 
+                nodePositions.push({ x: nodeX, y: nodeY, initial: company.initial, angle: company.angle });
+
                 // Branch
                 const branch = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 branch.setAttribute('d', `M${xStart},${yStart} L${xEnd},${yEnd}`);
                 branch.setAttribute('class', 'branch');
                 const branchLen = Math.sqrt((xEnd - xStart) ** 2 + (yEnd - yStart) ** 2);
                 branch.style.setProperty('--branch-length', branchLen);
-                branch.style.animationDelay = `${5.0 + i * 0.6}s`;
+                branch.style.animationDelay = `${2.0 + i * 0.2}s`;
                 branchesG.appendChild(branch);
 
-                // Node group
+                // Node group - positioned via transform attribute, NOT CSS
                 const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                g.setAttribute('class', 'node-group');
                 g.setAttribute('transform', `translate(${nodeX}, ${nodeY})`);
+                // Set opacity via inline style for animation
                 g.style.opacity = '0';
-                g.style.animation = `nodeAppear 0.8s ease-out ${6.0 + i * 0.6}s forwards`;
+                g.style.animation = `nodeAppear 0.5s cubic-bezier(0.22, 1, 0.36, 1) ${2.4 + i * 0.2}s forwards`;
                 nodesG.appendChild(g);
 
-                // Scale container
+                // Inner group for scale animation (separate from position transform)
                 const scaleG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                 scaleG.setAttribute('class', 'node-scale');
-                scaleG.style.animationDelay = `${6.0 + i * 0.6}s`;
+                scaleG.style.animationDelay = `${2.4 + i * 0.2}s`;
                 g.appendChild(scaleG);
 
-                // Ring
-                const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                ring.setAttribute('r', nodeRadius);
-                ring.setAttribute('class', 'node-ring');
-                ring.style.animationDelay = `${6.2 + i * 0.6}s`;
-                scaleG.appendChild(ring);
+                // Node frame
+                const frame = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                frame.setAttribute('r', nodeRadius);
+                frame.setAttribute('class', 'node-frame');
+                frame.style.animationDelay = `${2.5 + i * 0.2}s`;
+                scaleG.appendChild(frame);
 
-                // Label
-                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                label.setAttribute('class', 'node-label');
-                label.setAttribute('y', -nodeRadius - 10);
-                label.textContent = industry.name;
-                label.style.animationDelay = `${6.8 + i * 0.6}s`;
-                scaleG.appendChild(label);
-
-                // Industry icon
-                const iconG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                iconG.setAttribute('transform', 'scale(1.8)');
-                iconG.setAttribute('opacity', '0');
-                iconG.style.animation = `fadeInText 0.5s ease-out ${6.5 + i * 0.6}s forwards`;
-                
-                const icon = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                icon.setAttribute('d', industry.symbolPath);
-                icon.setAttribute('fill', 'var(--white)');
-                icon.setAttribute('stroke', 'none');
-                iconG.appendChild(icon);
-                scaleG.appendChild(iconG);
+                // Node text (placeholder logo)
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('class', 'node-text');
+                text.textContent = company.initial;
+                text.style.animationDelay = `${2.8 + i * 0.2}s`;
+                scaleG.appendChild(text);
             });
 
-            setTimeout(() => {
-                navbar.classList.add('visible');
-                scrollHint.classList.add('visible');
-                ecosystemSvg.classList.add('settled');
-            }, 10000);
+            // Build the travel path: center -> all 4 nodes in order -> back to center
+            let pathD = `M${centerX},${centerY}`;
+            nodePositions.forEach(pos => {
+                pathD += ` L${pos.x},${pos.y}`;
+            });
+            pathD += ` L${centerX},${centerY}`;
+            travelPath.setAttribute('d', pathD);
 
-            document.querySelectorAll('a[href^="#"]').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    const target = document.querySelector(link.getAttribute('href'));
-                    if (target) {
-                        e.preventDefault();
-                        target.scrollIntoView({ behavior: 'smooth' });
-                    }
-                });
+            // Calculate total path length for timing
+            const totalPathLength = travelPath.getTotalLength();
+
+            // Calculate cumulative distances to each node for flash timing
+            const nodeFlashTimes = [];
+            let cumulativeDist = 0;
+
+            // Center to first node
+            const firstNodeDist = Math.sqrt((nodePositions[0].x - centerX) ** 2 + (nodePositions[0].y - centerY) ** 2);
+            cumulativeDist += firstNodeDist;
+            nodeFlashTimes.push(cumulativeDist / totalPathLength);
+
+            // Between nodes
+            for (let i = 1; i < nodePositions.length; i++) {
+                const dist = Math.sqrt((nodePositions[i].x - nodePositions[i-1].x) ** 2 + (nodePositions[i].y - nodePositions[i-1].y) ** 2);
+                cumulativeDist += dist;
+                nodeFlashTimes.push(cumulativeDist / totalPathLength);
+            }
+
+            // Last node back to center
+            const lastToCenter = Math.sqrt((centerX - nodePositions[nodePositions.length - 1].x) ** 2 + (centerY - nodePositions[nodePositions.length - 1].y) ** 2);
+            cumulativeDist += lastToCenter;
+
+            const travelDuration = 3; // seconds for the light to travel the full path
+
+            // Set up the traveling light animation
+            const animateMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+            animateMotion.setAttribute('dur', `${travelDuration}s`);
+            animateMotion.setAttribute('repeatCount', '1');
+            animateMotion.setAttribute('fill', 'freeze');
+            animateMotion.setAttribute('path', pathD);
+
+            travelingLight.parentNode.appendChild(animateMotion);
+            lightGlow.parentNode.appendChild(animateMotion.cloneNode(true));
+
+            // Start the traveling light after all nodes are formed
+            setTimeout(() => {
+                travelingLight.classList.add('active');
+                lightGlow.classList.add('active');
+                travelingLight.style.setProperty('--travel-duration', `${travelDuration}s`);
+                lightGlow.style.setProperty('--travel-duration', `${travelDuration}s`);
+
+                // Trigger the animateMotion
+                const motions = document.querySelectorAll('animateMotion');
+                motions.forEach(m => m.beginElement());
+            }, 3600);
+
+            // Node flash effects as light passes through each node
+            nodeFlashTimes.forEach((time, i) => {
+                setTimeout(() => {
+                    const flash = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    flash.setAttribute('cx', nodePositions[i].x);
+                    flash.setAttribute('cy', nodePositions[i].y);
+                    flash.setAttribute('r', nodeRadius);
+                    flash.setAttribute('class', 'node-flash');
+                    nodeFlashesG.appendChild(flash);
+                    flash.getBoundingClientRect();
+                    flash.classList.add('active');
+                    setTimeout(() => flash.remove(), 700);
+                }, (3600 + time * travelDuration * 1000));
+            });
+
+            // Build portfolio cards
+            companies.forEach(company => {
+                const card = document.createElement('div');
+                card.className = 'portfolio-card';
+                card.innerHTML = `
+                    <div class="card-initial">${company.initial}</div>
+                    <h3 class="card-title">${company.name}</h3>
+                    <p class="card-description">${company.desc}</p>
+                    <div class="card-tags">
+                        ${company.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+                portfolioGrid.appendChild(card);
+            });
+
+            // Portfolio link smooth scroll
+            portfolioLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            scrollDown.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' });
             });
         });
     </script>
