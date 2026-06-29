@@ -9,17 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --black: #0a0a0a;
-            --charcoal: #111111;
-            --charcoal-light: #1a1a1a;
-            --gold: #b8985a;
-            --gold-dim: rgba(184, 152, 90, 0.3);
-            --gold-faint: rgba(184, 152, 90, 0.08);
-            --gold-brighter: rgba(184, 152, 90, 0.6);
-            --white: #f5f5f5;
-            --white-dim: rgba(245, 245, 245, 0.55);
-            --white-faint: rgba(245, 245, 245, 0.15);
-            --slate: #666666;
+            --black: #080808;
+            --charcoal: #0e0e0e;
+            --charcoal-mid: #141414;
+            --charcoal-light: #1c1c1c;
+            --white: #f0f0f0;
+            --white-dim: rgba(240, 240, 240, 0.6);
+            --slate: #707070;
+            --warm-gold: #c9a84c;
+            --warm-gold-dim: rgba(201, 168, 76, 0.1);
+            --warm-gold-med: rgba(201, 168, 76, 0.25);
+            --warm-gold-bright: rgba(201, 168, 76, 0.45);
+            --border-subtle: rgba(255, 255, 255, 0.04);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,805 +34,582 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
-        .bg-layer {
+        /* ===== CINEMATIC OPENING ===== */
+        .opening-overlay {
             position: fixed;
             top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
+            width: 100%; height: 100vh;
+            background: #000;
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             pointer-events: none;
-            background: var(--black);
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .opening-overlay.fade-out { opacity: 0; }
+
+        .seq-logo-full {
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.96);
+            transition: all 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .seq-logo-full.active { opacity: 1; transform: scale(1); }
+        .seq-logo-full img { width: 400px; height: auto; }
+
+        .seq-mission {
+            position: absolute;
+            opacity: 0;
+            text-align: center;
+            max-width: 600px;
+            padding: 0 40px;
+            transition: all 1.2s ease;
+        }
+        .seq-mission.active { opacity: 1; transform: translateY(-10px); }
+        .seq-mission p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--white);
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+        }
+
+        .seq-assembly {
+            position: absolute;
+            width: 100%; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .seq-assembly.active { opacity: 1; }
+        .seq-assembly svg { width: 70vmin; height: 70vmin; max-width: 600px; }
+
+        /* ===== MAIN SITE ===== */
+        .main-site {
+            opacity: 0;
+            transition: opacity 1.5s ease 0.5s;
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-site.visible { opacity: 1; display: flex; }
 
         /* ===== NAVIGATION ===== */
         nav {
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 1000;
-            padding: 28px 60px;
+            padding: 24px 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0) 100%);
+            background: linear-gradient(to bottom, rgba(8,8,8,1) 0%, rgba(8,8,8,0) 100%);
             opacity: 0;
-            transition: opacity 2s ease;
+            transform: translateY(-20px);
+            transition: all 1s ease;
         }
-        nav.visible { opacity: 1; }
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
+        nav.visible { opacity: 1; transform: translateY(0); }
+        nav.scrolled {
+            background: rgba(8, 8, 8, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 18px 60px;
         }
-        .nav-logo img {
-            height: 32px;
-            width: auto;
-            display: block;
-        }
-        .nav-logo-text {
+        .nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+        .nav-logo img { height: 32px; width: auto; }
+        .nav-logo span {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 400;
-            letter-spacing: 0.3em;
+            font-size: 1.1rem;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
             color: var(--white);
         }
-        .nav-links {
-            display: flex;
-            gap: 42px;
-            list-style: none;
-        }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
         .nav-links a {
             text-decoration: none;
-            color: var(--white-dim);
+            color: var(--slate);
             font-size: 0.65rem;
-            font-weight: 400;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            transition: color 0.5s ease;
-            position: relative;
-        }
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--gold);
-            transition: width 0.4s ease;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--white);
-        }
-        .nav-links a:hover::after, .nav-links a.active::after {
-            width: 100%;
-        }
-
-        /* ===== HERO ===== */
-        .hero {
-            position: relative;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding-top: 100px;
-            padding-bottom: 80px;
-        }
-
-        .ecosystem-svg {
-            width: 85vmin;
-            height: 85vmin;
-            max-width: 900px;
-            max-height: 900px;
-            overflow: visible;
-            transition: transform 4s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .ecosystem-svg.settled {
-            transform: scale(0.88);
-        }
-
-        /* ===== STAGE 1: LOGO ===== */
-        .center-emblem {
-            opacity: 0;
-            transform-origin: 400px 360px;
-            animation: emblemIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
-        }
-        @keyframes emblemIn {
-            0% { opacity: 0; transform: scale(0.96); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .center-logo-img {
-            filter: drop-shadow(0 0 12px rgba(184, 152, 90, 0.2));
-        }
-        .center-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 20px;
-            font-weight: 400;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            fill: var(--white);
-            text-anchor: middle;
-            opacity: 0;
-            animation: textIn 1.2s ease-out 1.5s forwards;
-        }
-        .center-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 9px;
-            font-weight: 400;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            fill: var(--white-dim);
-            text-anchor: middle;
-            opacity: 0;
-            animation: textIn 1.2s ease-out 1.9s forwards;
-        }
-        @keyframes textIn {
-            to { opacity: 1; }
-        }
-
-        /* ===== STAGE 2: CIRCLE ===== */
-        .ecosystem-circle {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1.2;
-            opacity: 0;
-            stroke-dasharray: 1696;
-            stroke-dashoffset: 1696;
-            animation: drawCircle 2.5s cubic-bezier(0.4, 0, 0.2, 1) 2.8s forwards;
-            transform-origin: 400px 400px;
-            filter: drop-shadow(0 0 6px var(--gold-dim));
-        }
-        @keyframes drawCircle {
-            0% { opacity: 0; stroke-dashoffset: 1696; }
-            5% { opacity: 0.75; }
-            100% { opacity: 0.75; stroke-dashoffset: 0; }
-        }
-
-        /* ===== STAGE 3: BRANCHES ===== */
-        .branch {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1.0;
-            opacity: 0;
-            stroke-dasharray: var(--branch-length);
-            stroke-dashoffset: var(--branch-length);
-            animation: drawBranch 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            filter: drop-shadow(0 0 4px var(--gold-dim));
-        }
-        @keyframes drawBranch {
-            0% { opacity: 0; stroke-dashoffset: var(--branch-length); }
-            10% { opacity: 0.65; }
-            100% { opacity: 0.65; stroke-dashoffset: 0; }
-        }
-
-        /* ===== STAGE 4: INDUSTRY NODES ===== */
-        .node-group {
-            opacity: 0;
-        }
-        @keyframes nodeAppear {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-        .node-scale {
-            transform: scale(0);
-            transform-origin: center;
-            animation: nodeScaleIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-        @keyframes nodeScaleIn {
-            0% { transform: scale(0); }
-            100% { transform: scale(1); }
-        }
-        .node-ring {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1.0;
-            opacity: 0;
-            stroke-dasharray: 377;
-            stroke-dashoffset: 377;
-            animation: drawNodeRing 0.8s ease-out forwards;
-            filter: drop-shadow(0 0 5px var(--gold-dim));
-        }
-        @keyframes drawNodeRing {
-            0% { opacity: 0; stroke-dashoffset: 377; }
-            20% { opacity: 0.8; }
-            100% { opacity: 0.8; stroke-dashoffset: 0; }
-        }
-        .node-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 8px;
             font-weight: 500;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            fill: var(--white);
-            text-anchor: middle;
-            opacity: 0;
-            animation: labelIn 0.6s ease-out forwards;
+            transition: color 0.3s ease;
         }
-        @keyframes labelIn {
-            to { opacity: 1; }
-        }
-        @keyframes fadeInText {
-            to { opacity: 1; }
-        }
-
-        /* ===== STAGE 5: BREATHING ===== */
-        .breath-ring {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-dasharray: 40, 1656;
-            stroke-dashoffset: 0;
-            opacity: 0;
-            filter: blur(1px) drop-shadow(0 0 8px var(--gold-dim));
-            transform-origin: 400px 400px;
-            animation: 
-                breathFadeIn 3s ease-out forwards,
-                breathe 8s ease-in-out infinite;
-        }
-        @keyframes breathFadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.45; }
-        }
-        @keyframes breathe {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.55; }
-        }
-
-        .flow-line {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1.5;
-            opacity: 0;
-            stroke-dasharray: 8, 1688;
-            stroke-dashoffset: 0;
-            transform-origin: 400px 400px;
-            animation: flowFadeIn 3s ease-out forwards, flowDrift 20s linear infinite;
-            filter: drop-shadow(0 0 6px var(--gold-dim));
-        }
-        @keyframes flowFadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.35; }
-        }
-        @keyframes flowDrift {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== SCROLL INDICATOR ===== */
-        .scroll-hint {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            transition: opacity 2s ease;
+        .nav-links a:hover { color: var(--warm-gold); }
+        .nav-cta {
+            padding: 9px 24px;
+            border: 1px solid var(--warm-gold);
+            color: var(--warm-gold);
             text-decoration: none;
-            cursor: pointer;
-        }
-        .scroll-hint.visible { opacity: 1; }
-        .scroll-hint span {
-            font-size: 0.5rem;
-            letter-spacing: 0.5em;
-            text-transform: uppercase;
-            color: var(--white-dim);
-            font-weight: 400;
-        }
-        .scroll-line {
-            width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, var(--gold-dim), transparent);
-            animation: scrollPulse 3s ease-in-out infinite;
-        }
-        @keyframes scrollPulse {
-            0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
-            50% { opacity: 0.7; transform: scaleY(1); }
-        }
-
-        /* ===== CONTENT ===== */
-        .content {
-            position: relative;
-            z-index: 10;
-            background: linear-gradient(to bottom, rgba(10,10,10,0) 0%, var(--black) 150px);
-        }
-
-        .industries-section {
-            padding: 120px 60px 80px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .section-header {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-        .section-eyebrow {
-            font-size: 0.6rem;
-            letter-spacing: 0.5em;
-            text-transform: uppercase;
-            color: var(--gold);
-            display: block;
-            margin-bottom: 20px;
+            font-size: 0.65rem;
             font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
         }
-        .section-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.8rem;
-            font-weight: 300;
-            letter-spacing: 0.02em;
-            color: var(--white);
-        }
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: var(--white-dim);
-            margin-top: 16px;
-            font-weight: 300;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.8;
-        }
+        .nav-cta:hover { background: var(--warm-gold); color: var(--black); }
 
-        .industries-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--charcoal-light);
-            border: 1px solid var(--charcoal-light);
-        }
-        @media (max-width: 1100px) {
-            .industries-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 700px) {
-            .industries-grid { grid-template-columns: 1fr; }
-        }
-
-        .industry-card {
-            background: var(--black);
-            padding: 50px 40px;
-            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-            overflow: hidden;
-            text-align: center;
+        /* ===== ECOSYSTEM DASHBOARD ===== */
+        .dashboard {
+            padding: 140px 60px 80px;
+            max-width: 1600px;
+            margin: 0 auto;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            border: 1px solid rgba(184, 152, 90, 0.15);
-        }
-        .industry-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 1px;
-            background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        .industry-card:hover::before {
-            opacity: 1;
-        }
-        .industry-card:hover {
-            background: var(--charcoal);
-            border-color: rgba(184, 152, 90, 0.3);
-        }
-        .industry-icon-wrap {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 1px solid var(--gold-dim);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 28px;
-            background: rgba(184, 152, 90, 0.03);
-            transition: all 0.4s ease;
-        }
-        .industry-card:hover .industry-icon-wrap {
-            border-color: var(--gold);
-            background: rgba(184, 152, 90, 0.08);
-            transform: scale(1.05);
-        }
-        .industry-icon-wrap svg {
-            width: 36px;
-            height: 36px;
-            fill: var(--white);
-            opacity: 0.9;
-        }
-        .industry-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 400;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            color: var(--white);
-        }
-        .industry-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 500;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 32px;
-        }
-        .industry-arrow {
-            font-size: 1.2rem;
-            color: var(--gold-dim);
-            transition: all 0.3s ease;
-            margin-top: auto;
-        }
-        .industry-card:hover .industry-arrow {
-            color: var(--gold);
-            transform: translateX(4px);
         }
 
-        .site-footer {
-            padding: 80px 60px 40px;
-            border-top: 1px solid rgba(255,255,255,0.04);
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 60px;
+        .dashboard-header {
+            text-align: center;
             margin-bottom: 60px;
         }
-        @media (max-width: 900px) {
-            .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
-        }
-        .footer-brand {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            letter-spacing: 0.25em;
+        .dashboard-header .label {
+            font-size: 0.7rem;
+            letter-spacing: 0.5em;
             text-transform: uppercase;
-            color: var(--white);
+            color: var(--warm-gold);
             margin-bottom: 16px;
+            display: block;
         }
-        .footer-tagline {
-            font-size: 0.8rem;
-            color: var(--white-dim);
-            line-height: 1.7;
-            font-weight: 300;
-            max-width: 300px;
-        }
-        .footer-heading {
-            font-size: 0.6rem;
-            letter-spacing: 0.25em;
+        .dashboard-header h1 {
+            font-size: 3.5rem;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 20px;
-            font-weight: 500;
         }
-        .footer-links {
-            list-style: none;
+
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1px;
+            background: var(--border-subtle);
+            border: 1px solid var(--border-subtle);
+            margin-top: auto;
         }
-        .footer-links li {
-            margin-bottom: 12px;
+
+        .ecosystem-column {
+            background: var(--charcoal);
+            grid-column: span 2;
+            transition: background 0.5s ease;
         }
-        .footer-links a {
-            text-decoration: none;
-            color: var(--white-dim);
-            font-size: 0.8rem;
-            font-weight: 300;
-            transition: color 0.3s ease;
-        }
-        .footer-links a:hover {
-            color: var(--white);
-        }
-        .footer-bottom {
+        .ecosystem-column.bottom-row { grid-column: span 3; }
+
+        .column-header {
+            padding: 24px 30px;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.04);
+            gap: 20px;
         }
-        .footer-copyright {
-            font-size: 0.65rem;
-            color: var(--slate);
-            letter-spacing: 0.1em;
+        .column-header h3 {
+            font-size: 0.8rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
         }
-        .footer-legal {
-            display: flex;
-            gap: 30px;
+        .column-line { flex: 1; height: 1px; background: var(--border-subtle); }
+        .column-icon { width: 24px; height: 24px; fill: var(--warm-gold); opacity: 0.7; }
+
+        /* ===== COMPANY CARD ===== */
+        .company-card {
+            padding: 40px 30px;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
         }
-        .footer-legal a {
-            font-size: 0.65rem;
-            color: var(--slate);
-            text-decoration: none;
-            letter-spacing: 0.1em;
-            transition: color 0.3s ease;
+        .company-card:last-child { border-bottom: none; }
+        .company-card::after {
+            content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 1px;
+            background: var(--warm-gold); transition: width 0.6s ease;
         }
-        .footer-legal a:hover {
-            color: var(--white-dim);
+        .company-card:hover { background: var(--warm-gold-dim); transform: translateY(-4px); }
+        .company-card:hover::after { width: 100%; }
+
+        .company-card.expanded {
+            background: var(--charcoal-light);
+            cursor: default;
         }
+
+        .company-top { display: flex; align-items: center; gap: 20px; }
+        .company-logo-wrap {
+            width: 52px; height: 52px;
+            border: 1px solid var(--border-subtle);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; font-weight: 500; color: var(--white);
+            transition: all 0.4s ease;
+            background: var(--charcoal-mid);
+        }
+        .company-card:hover .company-logo-wrap { border-color: var(--warm-gold-med); color: var(--warm-gold); }
+
+        .company-info h4 { font-size: 1.5rem; color: var(--white); margin-bottom: 4px; }
+        .company-summary {
+            font-size: 0.9rem; color: var(--white-dim);
+            max-height: 0; opacity: 0; overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        .company-card:hover .company-summary, .company-card.expanded .company-summary {
+            max-height: 80px; opacity: 1; margin-top: 12px;
+        }
+
+        .company-detail {
+            max-height: 0; opacity: 0; overflow: hidden;
+            transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .company-card.expanded .company-detail {
+            max-height: 500px; opacity: 1; margin-top: 30px;
+        }
+        .detail-content {
+            padding: 24px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle);
+        }
+        .detail-content p { font-size: 0.95rem; color: var(--white-dim); margin-bottom: 20px; font-weight: 300; }
+        .tags { display: flex; gap: 12px; flex-wrap: wrap; }
+        .tag {
+            font-size: 0.65rem; padding: 5px 12px; border: 1px solid var(--border-subtle);
+            color: var(--slate); text-transform: uppercase; letter-spacing: 0.1em;
+        }
+
+        /* ===== FOOTER ===== */
+        footer { padding: 60px; border-top: 1px solid var(--border-subtle); background: #050505; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; max-width: 1400px; margin: 0 auto; }
+        .footer-logo img { height: 30px; margin-bottom: 20px; }
+        .footer-text { font-size: 0.85rem; color: var(--slate); max-width: 300px; }
+        .footer-col h5 { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--warm-gold); margin-bottom: 24px; }
+        .footer-col a { display: block; color: var(--white-dim); text-decoration: none; font-size: 0.85rem; margin-bottom: 12px; transition: color 0.3s ease; }
+        .footer-col a:hover { color: var(--white); }
+
+        @media (max-width: 1100px) {
+            .ecosystem-grid { grid-template-columns: 1fr; }
+            .ecosystem-column, .ecosystem-column.bottom-row { grid-column: auto; }
+            .dashboard { padding: 100px 30px 60px; }
+        }
+
+        /* Animation Classes */
+        .fade-up { opacity: 0; transform: translateY(20px); transition: all 1s ease; }
+        .fade-up.active { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
 
-    <div class="bg-layer"></div>
-
-    <nav id="navbar">
-        <a href="#" class="nav-logo">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAABZUlEQVR42u3c3Q7CIAyGYUu8/1v+PDUmxgH9G749VhkPLXQzapIexHoMCAAEEEAACQABBBBAAkAAAQSQABBAAAEkAAQQQAAJAAEEEEACQAABBJAAEEAAASQABBBAAAkAAQQQQAJAAAEEEEACwLp4Joxxxx8kGxmYs+gCcBN5NCkXc3iNS0l23AN/TUwTJWUL+6pFXvsoxlspGzXKQhs3wms57umHSPhCjT+Y5GfZ2wmAKijpEMTKDKxAPK4PlHO/92tBvLOwxZ2IArNRgYjW7RSOzMawA7BbGyOnU9omxtlapI59oJzuhZWB2LWRVkHPaCvj3OVORBPZaI5ZegSgFu4otLE4U+/PANw5BLSZjavXe/Uz0/rAmYu6kgXfstEctoi5iSX8Ca0uANnmRMxzX5vJwIon0vLMgLf3lzTd1Y/0M1qf0OBbuc0FA3Az2zNK2ILLq2Lvs+w90E5NRUoYQAAB/Od4AbceP62mRXxgAAAAAElFTkSuQmCC" alt="SM">
-            <span class="nav-logo-text">Santa Monica</span>
-        </a>
-        <ul class="nav-links">
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#companies">Our Companies</a></li>
-            <li><a href="#industries">Industries</a></li>
-            <li><a href="#investors">Investor Relations</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <section class="hero" id="hero">
-            <svg class="ecosystem-svg" viewBox="0 0 800 800" id="ecosystemSvg">
-
-                <circle cx="400" cy="400" r="270" class="ecosystem-circle" />
-                <circle cx="400" cy="400" r="270" class="breath-ring" />
-                <circle cx="400" cy="400" r="270" class="flow-line" />
-
-                <g id="branchesG"></g>
-                <g id="nodesG"></g>
-
-                <g class="center-emblem">
-                    <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAABZUlEQVR42u3c3Q7CIAyGYUu8/1v+PDUmxgH9G749VhkPLXQzapIexHoMCAAEEEAACQABBBBAAkAAAQSQABBAAAEkAAQQQAAJAAEEEEACQAABBJAAEEAAASQABBBAAAkAAQQQQAJAAAEEEEACwLp4Joxxxx8kGxmYs+gCcBN5NCkXc3iNS0l23AN/TUwTJWUL+6pFXvsoxlspGzXKQhs3wms57umHSPhCjT+Y5GfZ2wmAKijpEMTKDKxAPK4PlHO/92tBvLOwxZ2IArNRgYjW7RSOzMawA7BbGyOnU9omxtlapI59oJzuhZWB2LWRVkHPaCvj3OVORBPZaI5ZegSgFu4otLE4U+/PANw5BLSZjavXe/Uz0/rAmYu6kgXfstEctoi5iSX8Ca0uANnmRMxzX5vJwIon0vLMgLf3lzTd1Y/0M1qf0OBbuc0FA3Az2zNK2ILLq2Lvs+w90E5NRUoYQAAB/Od4AbceP62mRXxgAAAAAElFTkSuQmCC" x="360" y="270" width="80" height="80" class="center-logo-img" />
-                    <text x="400" y="430" class="center-name">Santa Monica</text>
-                    <text x="400" y="455" class="center-name">Group</text>
-                    <text x="400" y="480" class="center-subtitle">Strategic Investment Holding</text>
-                </g>
-            </svg>
-
-            <a href="#companies" class="scroll-hint" id="scrollHint">
-                <span>Discover</span>
-                <div class="scroll-line"></div>
-            </a>
-        </section>
-
-        <div class="content">
-            <section class="industries-section" id="companies">
-                <div class="section-header">
-                    <span class="section-eyebrow">Our Ecosystem</span>
-                    <h2 class="section-title">Industries & Companies</h2>
-                    <p class="section-subtitle">A diversified portfolio of strategic investments across key sectors, each contributing to long-term value creation.</p>
-                </div>
-
-                <div class="industries-grid">
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M-8,-12 L-8,12 L8,12 L8,-12 L0,-18 Z M-5,-2 L-5,2 L-2,2 L-2,-2 Z M2,-2 L2,2 L5,2 L5,-2 Z M-5,5 L-5,9 L-2,9 L-2,5 Z M2,5 L2,9 L5,9 L5,5 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Property</h3>
-                        <span class="industry-subtitle">Investments</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M2,-14 L-6,-14 L-2,0 L-8,0 L4,14 L0,2 L6,2 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Energy</h3>
-                        <span class="industry-subtitle">Investments</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M-14,4 L-14,8 L-10,8 L-10,4 L-6,4 L-6,8 L-2,8 L-2,4 L2,4 L2,8 L6,8 L6,4 L10,4 L10,8 L14,8 L14,4 L14,0 L-14,0 Z M-14,-4 L14,-4 L14,-8 L-14,-8 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Infrastructure</h3>
-                        <span class="industry-subtitle">Investments</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M0,-12 L2,-12 L3,-8 L5,-7 L8,-10 L10,-8 L7,-5 L8,-3 L12,-2 L12,0 L8,1 L7,3 L10,6 L8,8 L5,5 L3,6 L2,10 L0,10 L-1,6 L-3,5 L-6,8 L-8,6 L-5,3 L-6,1 L-10,0 L-10,-2 L-6,-3 L-5,-5 L-8,-8 L-6,-10 L-3,-7 L-1,-8 Z M0,-4 A4,4 0 0,1 0,4 A4,4 0 0,1 0,-4" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Industrial</h3>
-                        <span class="industry-subtitle">& Engineering</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M-14,2 L-8,2 L-4,-2 L-4,-6 L0,-8 L4,-6 L4,-2 L8,2 L14,2 L14,4 L8,4 L4,8 L4,12 L0,14 L-4,12 L-4,8 L-8,4 L-14,4 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Travel</h3>
-                        <span class="industry-subtitle">& Hospitality</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                    <div class="industry-card">
-                        <div class="industry-icon-wrap">
-                            <svg viewBox="-10 -10 20 20"><path d="M-12,8 L-12,-8 L-10,-8 L-10,8 Z M-6,8 L-6,-4 L-4,-4 L-4,8 Z M0,8 L0,-12 L2,-12 L2,8 Z M6,8 L6,0 L8,0 L8,8 Z M-12,-6 L-2,-12 L8,-2 L12,-8 L12,-6 L8,0 L-2,-10 L-12,-4 Z" fill="var(--white)"/></svg>
-                        </div>
-                        <h3 class="industry-title">Private Equity</h3>
-                        <span class="industry-subtitle">& Venture Capital</span>
-                        <span class="industry-arrow">→</span>
-                    </div>
-                </div>
-            </section>
-
-            <footer class="site-footer">
-                <div class="footer-grid">
-                    <div>
-                        <div class="footer-brand">Santa Monica Group</div>
-                        <p class="footer-tagline">A strategic investment holding company building long-term value through diversified sector expertise.</p>
-                    </div>
-                    <div>
-                        <div class="footer-heading">Navigation</div>
-                        <ul class="footer-links">
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#about">About</a></li>
-                            <li><a href="#companies">Our Companies</a></li>
-                            <li><a href="#industries">Industries</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <div class="footer-heading">Investors</div>
-                        <ul class="footer-links">
-                            <li><a href="#">Annual Reports</a></li>
-                            <li><a href="#">Share Information</a></li>
-                            <li><a href="#">Governance</a></li>
-                            <li><a href="#">News</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <div class="footer-heading">Contact</div>
-                        <ul class="footer-links">
-                            <li><a href="#">General Enquiries</a></li>
-                            <li><a href="#">Media</a></li>
-                            <li><a href="#">Investor Relations</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <span class="footer-copyright">© 2025 Santa Monica Group. All rights reserved.</span>
-                    <div class="footer-legal">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Use</a>
-                    </div>
-                </div>
-            </footer>
+    <!-- Opening Sequence -->
+    <div class="opening-overlay" id="openingOverlay">
+        <div class="seq-logo-full" id="seqLogo">
+            <img src="assets/logo_full.png" alt="Santa Monica Group">
         </div>
-    </main>
+        <div class="seq-mission" id="seqMission">
+            <p>Building enduring value through strategic partnerships across Africa's most vital industries.</p>
+        </div>
+        <div class="seq-assembly" id="seqAssembly">
+            <svg viewBox="0 0 800 800" id="assemblySvg">
+                <circle cx="400" cy="400" r="300" fill="none" stroke="#c9a84c" stroke-width="1" stroke-dasharray="1885" stroke-dashoffset="1885" id="assemblyCircle"></circle>
+                <g id="assemblyNodes"></g>
+                <image href="assets/logo_emblem.png" x="340" y="340" width="120" height="120" opacity="0" id="assemblyLogo"></image>
+            </svg>
+        </div>
+    </div>
+
+    <div class="main-site" id="mainSite">
+        <nav id="navbar">
+            <a href="#" class="nav-logo">
+                <img src="assets/logo_emblem.png" alt="SM">
+                <span>Santa Monica</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#ecosystem">Portfolio</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#leadership">Leadership</a></li>
+                <li><a href="#investors">Investors</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#contact" class="nav-cta">Investor Relations</a>
+        </nav>
+
+        <main class="dashboard" id="ecosystem">
+            <div class="dashboard-header fade-up" id="dashHeader">
+                <span class="label">Strategic Investment Group</span>
+                <h1>OUR INVESTMENT ECOSYSTEM</h1>
+            </div>
+
+            <div class="ecosystem-grid">
+                <!-- Mining -->
+                <div class="ecosystem-column fade-up">
+                    <div class="column-header">
+                        <svg class="column-icon" viewBox="-12 -12 24 24"><path d="M-8,-8 L8,8 M-8,8 L8,-8 M-10,0 L0,-10 L10,0 L0,10 Z"/></svg>
+                        <h3>Mining & Resources</h3>
+                        <div class="column-line"></div>
+                    </div>
+                    <div class="company-card" data-company="mining">
+                        <div class="company-top">
+                            <div class="company-logo-wrap">M</div>
+                            <div class="company-info">
+                                <h4>Masimong Mining</h4>
+                            </div>
+                        </div>
+                        <div class="company-summary">Strategic extraction and resource management across high-yield African nodes.</div>
+                        <div class="company-detail">
+                            <div class="detail-content">
+                                <p>Partnering with Tier-1 operators to unlock value in base metals and strategic energy minerals essential for the global transition. Our approach combines operational discipline with a deep commitment to environmental and social governance.</p>
+                                <div class="tags">
+                                    <span class="tag">Resources</span>
+                                    <span class="tag">BBBEE Level 1</span>
+                                    <span class="tag">Strategic</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial -->
+                <div class="ecosystem-column fade-up">
+                    <div class="column-header">
+                        <svg class="column-icon" viewBox="-12 -12 24 24"><path d="M-10,8 L10,8 M-8,8 L-8,-2 M-3,8 L-3,-2 M3,8 L3,-2 M8,8 L8,-2 M-10,-2 L0,-10 L10,-2 Z"/></svg>
+                        <h3>Financial Services</h3>
+                        <div class="column-line"></div>
+                    </div>
+                    <div class="company-card">
+                        <div class="company-top">
+                            <div class="company-logo-wrap">P</div>
+                            <div class="company-info">
+                                <h4>PSG Group</h4>
+                            </div>
+                        </div>
+                        <div class="company-summary">Market-leading financial infrastructure and entrepreneurial capital management.</div>
+                        <div class="company-detail">
+                            <div class="detail-content">
+                                <p>Focused on scalable financial platforms, banking, and specialized services that drive economic participation. PSG has a proven track record of creating shareholder value through disciplined capital allocation and management partnership.</p>
+                                <div class="tags">
+                                    <span class="tag">Banking</span>
+                                    <span class="tag">Education</span>
+                                    <span class="tag">Growth</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Healthcare -->
+                <div class="ecosystem-column fade-up">
+                    <div class="column-header">
+                        <svg class="column-icon" viewBox="-12 -12 24 24"><path d="M-10,0 L10,0 M0,-10 L0,10 M-7,-7 L7,7 M-7,7 L7,-7"/></svg>
+                        <h3>Healthcare</h3>
+                        <div class="column-line"></div>
+                    </div>
+                    <div class="company-card">
+                        <div class="company-top">
+                            <div class="company-logo-wrap">R</div>
+                            <div class="company-info">
+                                <h4>Remgro Healthcare</h4>
+                            </div>
+                        </div>
+                        <div class="company-summary">World-class medical infrastructure and specialized health services.</div>
+                        <div class="company-detail">
+                            <div class="detail-content">
+                                <p>Scaling premium healthcare access through hospital networks and pharmaceutical logistics across emerging markets. We invest in high-performance medical teams and advanced clinical technology to deliver superior patient outcomes.</p>
+                                <div class="tags">
+                                    <span class="tag">Mediclinic</span>
+                                    <span class="tag">Pharma</span>
+                                    <span class="tag">Infrastructure</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Energy -->
+                <div class="ecosystem-column bottom-row fade-up">
+                    <div class="column-header">
+                        <svg class="column-icon" viewBox="-12 -12 24 24"><path d="M2,-12 L-6,0 L2,0 L-4,12 L8,-2 L0,-2 Z"/></svg>
+                        <h3>Energy</h3>
+                        <div class="column-line"></div>
+                    </div>
+                    <div class="company-card">
+                        <div class="company-top">
+                            <div class="company-logo-wrap">Ph</div>
+                            <div class="company-info">
+                                <h4>Phembani Energy</h4>
+                            </div>
+                        </div>
+                        <div class="company-summary">Diversified energy assets focused on the future of African power generation.</div>
+                        <div class="company-detail">
+                            <div class="detail-content">
+                                <p>Investing in the full energy value chain, from traditional resources to innovative renewable solutions for industrial demand. Phembani is positioned to drive the continent's transition to a sustainable energy mix.</p>
+                                <div class="tags">
+                                    <span class="tag">Renewables</span>
+                                    <span class="tag">Transition</span>
+                                    <span class="tag">Power</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property -->
+                <div class="ecosystem-column bottom-row fade-up">
+                    <div class="column-header">
+                        <svg class="column-icon" viewBox="-12 -12 24 24"><path d="M-8,10 L-8,-6 L0,-12 L8,-6 L8,10 Z M-4,2 L4,2 M-4,6 L4,6"/></svg>
+                        <h3>Property</h3>
+                        <div class="column-line"></div>
+                    </div>
+                    <div class="company-card">
+                        <div class="company-top">
+                            <div class="company-logo-wrap">S</div>
+                            <div class="company-info">
+                                <h4>Strategic Property</h4>
+                            </div>
+                        </div>
+                        <div class="company-summary">Commercial and industrial real estate in high-growth urban corridors.</div>
+                        <div class="company-detail">
+                            <div class="detail-content">
+                                <p>Capturing yields through long-term ownership of prime logistics nodes and commercial centers in Africa's major cities. Our portfolio is optimized for the logistics-driven demands of modern digital economies.</p>
+                                <div class="tags">
+                                    <span class="tag">Logistics</span>
+                                    <span class="tag">Commercial</span>
+                                    <span class="tag">Yield</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-grid">
+                <div class="footer-logo">
+                    <img src="assets/logo_full.png" alt="Santa Monica">
+                    <p class="footer-text">Building enduring value across Africa's strategic industries since 1998.</p>
+                </div>
+                <div class="footer-col">
+                    <h5>Group</h5>
+                    <a href="#">About Us</a>
+                    <a href="#">Leadership</a>
+                    <a href="#">Investors</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h5>Portfolio</h5>
+                    <a href="#">Mining</a>
+                    <a href="#">Financials</a>
+                    <a href="#">Healthcare</a>
+                    <a href="#">Energy</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.getElementById('openingOverlay');
+            const seqLogo = document.getElementById('seqLogo');
+            const seqMission = document.getElementById('seqMission');
+            const seqAssembly = document.getElementById('seqAssembly');
+            const mainSite = document.getElementById('mainSite');
             const navbar = document.getElementById('navbar');
-            const ecosystemSvg = document.getElementById('ecosystemSvg');
-            const scrollHint = document.getElementById('scrollHint');
-            const branchesG = document.getElementById('branchesG');
-            const nodesG = document.getElementById('nodesG');
 
-            // Industries with their representative symbols
-            // Ordered to start from top and go clockwise
+            const assemblyCircle = document.getElementById('assemblyCircle');
+            const assemblyLogo = document.getElementById('assemblyLogo');
+            const assemblyNodes = document.getElementById('assemblyNodes');
+
             const industries = [
-                { 
-                    name: 'Property', 
-                    angle: -90,
-                    symbol: 'building',
-                    symbolPath: 'M-8,-12 L-8,12 L8,12 L8,-12 L0,-18 Z M-5,-2 L-5,2 L-2,2 L-2,-2 Z M2,-2 L2,2 L5,2 L5,-2 Z M-5,5 L-5,9 L-2,9 L-2,5 Z M2,5 L2,9 L5,9 L5,5 Z'
-                },
-                { 
-                    name: 'Energy', 
-                    angle: -30,
-                    symbol: 'bolt',
-                    symbolPath: 'M2,-14 L-6,-14 L-2,0 L-8,0 L4,14 L0,2 L6,2 Z'
-                },
-                { 
-                    name: 'Infrastructure', 
-                    angle: 30,
-                    symbol: 'bridge',
-                    symbolPath: 'M-14,4 L-14,8 L-10,8 L-10,4 L-6,4 L-6,8 L-2,8 L-2,4 L2,4 L2,8 L6,8 L6,4 L10,4 L10,8 L14,8 L14,4 L14,0 L-14,0 Z M-14,-4 L14,-4 L14,-8 L-14,-8 Z'
-                },
-                { 
-                    name: 'Industrial', 
-                    angle: 90,
-                    symbol: 'gear',
-                    symbolPath: 'M0,-12 L2,-12 L3,-8 L5,-7 L8,-10 L10,-8 L7,-5 L8,-3 L12,-2 L12,0 L8,1 L7,3 L10,6 L8,8 L5,5 L3,6 L2,10 L0,10 L-1,6 L-3,5 L-6,8 L-8,6 L-5,3 L-6,1 L-10,0 L-10,-2 L-6,-3 L-5,-5 L-8,-8 L-6,-10 L-3,-7 L-1,-8 Z M0,-4 A4,4 0 0,1 0,4 A4,4 0 0,1 0,-4'
-                },
-                { 
-                    name: 'Travel', 
-                    angle: 150,
-                    symbol: 'plane',
-                    symbolPath: 'M-14,2 L-8,2 L-4,-2 L-4,-6 L0,-8 L4,-6 L4,-2 L8,2 L14,2 L14,4 L8,4 L4,8 L4,12 L0,14 L-4,12 L-4,8 L-8,4 L-14,4 Z'
-                },
-                { 
-                    name: 'Private Equity', 
-                    angle: 210,
-                    symbol: 'chart',
-                    symbolPath: 'M-12,8 L-12,-8 L-10,-8 L-10,8 Z M-6,8 L-6,-4 L-4,-4 L-4,8 Z M0,8 L0,-12 L2,-12 L2,8 Z M6,8 L6,0 L8,0 L8,8 Z M-12,-6 L-2,-12 L8,-2 L12,-8 L12,-6 L8,0 L-2,-10 L-12,-4 Z'
-                }
+                { name: 'Mining', angle: -120, path: 'M-8,-8 L8,8 M-8,8 L8,-8 M-10,0 L0,-10 L10,0 L0,10 Z' },
+                { name: 'Financials', angle: -60, path: 'M-10,8 L10,8 M-8,8 L-8,-2 M-3,8 L-3,-2 M3,8 L3,-2 M8,8 L8,-2 M-10,-2 L0,-10 L10,-2 Z' },
+                { name: 'Healthcare', angle: 0, path: 'M-10,0 L10,0 M0,-10 L0,10 M-7,-7 L7,7 M-7,7 L7,-7' },
+                { name: 'Energy', angle: 120, path: 'M2,-12 L-6,0 L2,0 L-4,12 L8,-2 L0,-2 Z' },
+                { name: 'Property', angle: 180, path: 'M-8,10 L-8,-6 L0,-12 L8,-6 L8,10 Z M-4,2 L4,2 M-4,6 L4,6' }
             ];
 
-            const centerX = 400;
-            const centerY = 400;
-            const innerRadius = 270;
-            const branchLength = 90;
-            const nodeRadius = 50;
+            // --- ANIMATION SEQUENCE ---
+            // 0.5s: Logo
+            setTimeout(() => seqLogo.classList.add('active'), 500);
 
-            industries.forEach((industry, i) => {
-                const angleRad = (industry.angle * Math.PI) / 180;
-                const xStart = centerX + innerRadius * Math.cos(angleRad);
-                const yStart = centerY + innerRadius * Math.sin(angleRad);
-                const branchEndDist = innerRadius + branchLength - nodeRadius;
-                const xEnd = centerX + branchEndDist * Math.cos(angleRad);
-                const yEnd = centerY + branchEndDist * Math.sin(angleRad);
-                const nodeX = centerX + (innerRadius + branchLength) * Math.cos(angleRad);
-                const nodeY = centerY + (innerRadius + branchLength) * Math.sin(angleRad);
+            // 2.5s: Mission
+            setTimeout(() => {
+                seqLogo.style.opacity = '0';
+                setTimeout(() => seqMission.classList.add('active'), 800);
+            }, 2500);
 
-                // Branch
-                const branch = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                branch.setAttribute('d', `M${xStart},${yStart} L${xEnd},${yEnd}`);
-                branch.setAttribute('class', 'branch');
-                const branchLen = Math.sqrt((xEnd - xStart) ** 2 + (yEnd - yStart) ** 2);
-                branch.style.setProperty('--branch-length', branchLen);
-                branch.style.animationDelay = `${5.0 + i * 0.6}s`;
-                branchesG.appendChild(branch);
+            // 5.0s: SVG Assembly
+            setTimeout(() => {
+                seqMission.style.opacity = '0';
+                setTimeout(() => {
+                    seqAssembly.classList.add('active');
+                    runAssembly();
+                }, 800);
+            }, 5000);
 
-                // Node group
-                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                g.setAttribute('transform', `translate(${nodeX}, ${nodeY})`);
-                g.style.opacity = '0';
-                g.style.animation = `nodeAppear 0.8s ease-out ${6.0 + i * 0.6}s forwards`;
-                nodesG.appendChild(g);
+            // 7.8s: Transition to Main Site
+            setTimeout(() => {
+                overlay.classList.add('fade-out');
+                mainSite.style.display = 'flex';
+                setTimeout(() => {
+                    mainSite.classList.add('visible');
+                    navbar.classList.add('visible');
+                    document.getElementById('dashHeader').classList.add('active');
+                    document.querySelectorAll('.ecosystem-column').forEach((col, i) => {
+                        setTimeout(() => col.classList.add('active'), 200 + i * 150);
+                    });
+                }, 100);
+            }, 7800);
 
-                // Scale container
-                const scaleG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                scaleG.setAttribute('class', 'node-scale');
-                scaleG.style.animationDelay = `${6.0 + i * 0.6}s`;
-                g.appendChild(scaleG);
+            function runAssembly() {
+                // Circle draw
+                assemblyCircle.style.transition = 'stroke-dashoffset 2s ease-out';
+                assemblyCircle.style.strokeDashoffset = '0';
 
-                // Ring
-                const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                ring.setAttribute('r', nodeRadius);
-                ring.setAttribute('class', 'node-ring');
-                ring.style.animationDelay = `${6.2 + i * 0.6}s`;
-                scaleG.appendChild(ring);
+                // Logo fade
+                setTimeout(() => {
+                    assemblyLogo.style.transition = 'opacity 1s ease';
+                    assemblyLogo.style.opacity = '1';
+                }, 500);
 
-                // Label - ABOVE the circle
-                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                label.setAttribute('class', 'node-label');
-                label.setAttribute('y', -nodeRadius - 10);
-                label.textContent = industry.name;
-                label.style.animationDelay = `${6.8 + i * 0.6}s`;
-                scaleG.appendChild(label);
+                // Nodes assembly
+                industries.forEach((ind, i) => {
+                    const angleRad = (ind.angle * Math.PI) / 180;
+                    const x = 400 + 300 * Math.cos(angleRad);
+                    const y = 400 + 300 * Math.sin(angleRad);
 
-                // Industry icon - INSIDE the circle, white fill, scaled up
-                const iconG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                iconG.setAttribute('transform', 'scale(1.8)');
-                iconG.setAttribute('opacity', '0');
-                iconG.style.animation = `fadeInText 0.5s ease-out ${6.5 + i * 0.6}s forwards`;
-                
-                const icon = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                icon.setAttribute('d', industry.symbolPath);
-                icon.setAttribute('fill', 'var(--white)');
-                icon.setAttribute('stroke', 'none');
-                iconG.appendChild(icon);
-                scaleG.appendChild(iconG);
+                    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    g.setAttribute('transform', `translate(${x},${y})`);
+                    g.style.opacity = '0';
+                    g.style.transition = 'all 0.8s ease';
+                    assemblyNodes.appendChild(g);
+
+                    const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    ring.setAttribute('r', '30');
+                    ring.setAttribute('fill', 'none');
+                    ring.setAttribute('stroke', '#c9a84c');
+                    ring.setAttribute('stroke-width', '1');
+                    g.appendChild(ring);
+
+                    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    icon.setAttribute('d', ind.path);
+                    icon.setAttribute('fill', '#fff');
+                    icon.setAttribute('transform', 'scale(0.8)');
+                    g.appendChild(icon);
+
+                    setTimeout(() => {
+                        g.style.opacity = '1';
+                    }, 800 + (i * 200));
+                });
+            }
+
+            // Navbar behavior
+            window.addEventListener('scroll', () => {
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
             });
 
-            setTimeout(() => {
-                navbar.classList.add('visible');
-                scrollHint.classList.add('visible');
-                ecosystemSvg.classList.add('settled');
-            }, 10000);
-
-            document.querySelectorAll('a[href^="#"]').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    const target = document.querySelector(link.getAttribute('href'));
-                    if (target) {
-                        e.preventDefault();
-                        target.scrollIntoView({ behavior: 'smooth' });
-                    }
+            // Card expansion
+            document.querySelectorAll('.company-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const isExpanded = card.classList.contains('expanded');
+                    document.querySelectorAll('.company-card.expanded').forEach(c => c.classList.remove('expanded'));
+                    if (!isExpanded) card.classList.add('expanded');
                 });
             });
         });
