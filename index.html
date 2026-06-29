@@ -16,6 +16,8 @@
             --gold-dim: rgba(184, 152, 90, 0.3);
             --gold-faint: rgba(184, 152, 90, 0.08);
             --gold-brighter: rgba(184, 152, 90, 0.6);
+            --silver: #c0c0c0;
+            --silver-dim: rgba(192, 192, 192, 0.4);
             --white: #f5f5f5;
             --white-dim: rgba(245, 245, 245, 0.55);
             --white-faint: rgba(245, 245, 245, 0.15);
@@ -61,19 +63,28 @@
         .nav-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             text-decoration: none;
         }
-        .nav-logo img {
-            height: 32px;
+        .nav-logo .logo-emblem {
+            height: 38px;
             width: auto;
             display: block;
+            /* Silver monogram blends with dark background via mix-blend-mode */
+            mix-blend-mode: screen;
+            opacity: 0.85;
+            transition: opacity 0.4s ease, filter 0.4s ease;
+            filter: drop-shadow(0 0 8px rgba(184, 152, 90, 0.15));
+        }
+        .nav-logo:hover .logo-emblem {
+            opacity: 1;
+            filter: drop-shadow(0 0 12px rgba(184, 152, 90, 0.35));
         }
         .nav-logo-text {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 400;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
             color: var(--white);
         }
@@ -134,7 +145,7 @@
             transform: scale(0.88);
         }
 
-        /* ===== STAGE 1: LOGO ===== */
+        /* ===== CENTER EMBLEM - THE CORE ===== */
         .center-emblem {
             opacity: 0;
             transform-origin: 400px 360px;
@@ -144,9 +155,52 @@
             0% { opacity: 0; transform: scale(0.96); }
             100% { opacity: 1; transform: scale(1); }
         }
-        .center-logo-img {
-            filter: drop-shadow(0 0 12px rgba(184, 152, 90, 0.2));
+
+        /* The core emblem - silver monogram with gold harmony */
+        .core-emblem {
+            /* Subtle gold aura behind the silver monogram */
+            filter: drop-shadow(0 0 15px rgba(184, 152, 90, 0.2)) 
+                    drop-shadow(0 0 30px rgba(184, 152, 90, 0.08));
+            opacity: 0;
+            animation: coreReveal 2s ease-out 1.2s forwards;
         }
+        @keyframes coreReveal {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 0.9; transform: scale(1); }
+        }
+
+        /* Gold ring that draws around the emblem - the "core boundary" */
+        .core-ring {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 1;
+            opacity: 0;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 377;
+            animation: drawCoreRing 1.5s ease-out 2.5s forwards;
+            filter: drop-shadow(0 0 6px var(--gold-dim));
+        }
+        @keyframes drawCoreRing {
+            to { stroke-dashoffset: 0; opacity: 0.5; }
+        }
+
+        /* Inner gold glow ring - pulses gently */
+        .core-glow-ring {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 2;
+            opacity: 0;
+            filter: blur(4px) drop-shadow(0 0 8px var(--gold-dim));
+            animation: coreGlowFade 2s ease-out 3s forwards, coreGlowPulse 4s ease-in-out 5s infinite;
+        }
+        @keyframes coreGlowFade {
+            to { opacity: 0.15; }
+        }
+        @keyframes coreGlowPulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.25; }
+        }
+
         .center-name {
             font-family: 'Cormorant Garamond', serif;
             font-size: 20px;
@@ -156,7 +210,7 @@
             fill: var(--white);
             text-anchor: middle;
             opacity: 0;
-            animation: textIn 1.2s ease-out 1.5s forwards;
+            animation: textIn 1.2s ease-out 3.2s forwards;
         }
         .center-subtitle {
             font-family: 'Inter', sans-serif;
@@ -167,13 +221,13 @@
             fill: var(--white-dim);
             text-anchor: middle;
             opacity: 0;
-            animation: textIn 1.2s ease-out 1.9s forwards;
+            animation: textIn 1.2s ease-out 3.6s forwards;
         }
         @keyframes textIn {
             to { opacity: 1; }
         }
 
-        /* ===== STAGE 2: CIRCLE ===== */
+        /* ===== STAGE 2: ECOSYSTEM CIRCLE ===== */
         .ecosystem-circle {
             fill: none;
             stroke: var(--gold);
@@ -181,7 +235,7 @@
             opacity: 0;
             stroke-dasharray: 1696;
             stroke-dashoffset: 1696;
-            animation: drawCircle 2.5s cubic-bezier(0.4, 0, 0.2, 1) 2.8s forwards;
+            animation: drawCircle 2.5s cubic-bezier(0.4, 0, 0.2, 1) 4s forwards;
             transform-origin: 400px 400px;
             filter: drop-shadow(0 0 6px var(--gold-dim));
         }
@@ -258,7 +312,7 @@
             to { opacity: 1; }
         }
 
-        /* ===== STAGE 5: BREATHING ===== */
+        /* ===== STAGE 5: BREATHING ANIMATION ===== */
         .breath-ring {
             fill: none;
             stroke: var(--gold);
@@ -488,13 +542,19 @@
         @media (max-width: 900px) {
             .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
         }
-        .footer-brand {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--white);
-            margin-bottom: 16px;
+        .footer-logo-img {
+            height: 55px;
+            width: auto;
+            margin-bottom: 20px;
+            opacity: 0.85;
+            transition: opacity 0.3s ease;
+            /* Full logo on dark background - blend elegantly */
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 10px rgba(184, 152, 90, 0.1));
+        }
+        .footer-logo-img:hover {
+            opacity: 1;
+            filter: drop-shadow(0 0 15px rgba(184, 152, 90, 0.2));
         }
         .footer-tagline {
             font-size: 0.8rem;
@@ -559,9 +619,10 @@
 
     <div class="bg-layer"></div>
 
+    <!-- NAVIGATION - Silver monogram with gold glow -->
     <nav id="navbar">
         <a href="#" class="nav-logo">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAABZUlEQVR42u3c3Q7CIAyGYUu8/1v+PDUmxgH9G749VhkPLXQzapIexHoMCAAEEEAACQABBBBAAkAAAQSQABBAAAEkAAQQQAAJAAEEEEACQAABBJAAEEAAASQABBBAAAkAAQQQQAJAAAEEEEACwLp4Joxxxx8kGxmYs+gCcBN5NCkXc3iNS0l23AN/TUwTJWUL+6pFXvsoxlspGzXKQhs3wms57umHSPhCjT+Y5GfZ2wmAKijpEMTKDKxAPK4PlHO/92tBvLOwxZ2IArNRgYjW7RSOzMawA7BbGyOnU9omxtlapI59oJzuhZWB2LWRVkHPaCvj3OVORBPZaI5ZegSgFu4otLE4U+/PANw5BLSZjavXe/Uz0/rAmYu6kgXfstEctoi5iSX8Ca0uANnmRMxzX5vJwIon0vLMgLf3lzTd1Y/0M1qf0OBbuc0FA3Az2zNK2ILLq2Lvs+w90E5NRUoYQAAB/Od4AbceP62mRXxgAAAAAElFTkSuQmCC" alt="SM">
+            <img src="data:image/png;base64,{EMBLEM_B64}" alt="SM" class="logo-emblem">
             <span class="nav-logo-text">Santa Monica</span>
         </a>
         <ul class="nav-links">
@@ -585,11 +646,23 @@
                 <g id="branchesG"></g>
                 <g id="nodesG"></g>
 
+                <!-- ===== CENTER CORE - THE SILVER EMBLEM ===== -->
                 <g class="center-emblem">
-                    <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAABZUlEQVR42u3c3Q7CIAyGYUu8/1v+PDUmxgH9G749VhkPLXQzapIexHoMCAAEEEAACQABBBBAAkAAAQSQABBAAAEkAAQQQAAJAAEEEEACQAABBJAAEEAAASQABBBAAAkAAQQQQAJAAAEEEEACwLp4Joxxxx8kGxmYs+gCcBN5NCkXc3iNS0l23AN/TUwTJWUL+6pFXvsoxlspGzXKQhs3wms57umHSPhCjT+Y5GfZ2wmAKijpEMTKDKxAPK4PlHO/92tBvLOwxZ2IArNRgYjW7RSOzMawA7BbGyOnU9omxtlapI59oJzuhZWB2LWRVkHPaCvj3OVORBPZaI5ZegSgFu4otLE4U+/PANw5BLSZjavXe/Uz0/rAmYu6kgXfstEctoi5iSX8Ca0uANnmRMxzX5vJwIon0vLMgLf3lzTd1Y/0M1qf0OBbuc0FA3Az2zNK2ILLq2Lvs+w90E5NRUoYQAAB/Od4AbceP62mRXxgAAAAAElFTkSuQmCC" x="360" y="270" width="80" height="80" class="center-logo-img" />
-                    <text x="400" y="430" class="center-name">Santa Monica</text>
-                    <text x="400" y="455" class="center-name">Group</text>
-                    <text x="400" y="480" class="center-subtitle">Strategic Investment Holding</text>
+                    <!-- Gold glow ring behind the emblem -->
+                    <circle cx="400" cy="360" r="60" class="core-glow-ring" />
+                    
+                    <!-- Gold ring that draws around the core -->
+                    <circle cx="400" cy="360" r="55" class="core-ring" />
+                    
+                    <!-- The silver monogram - the heart of the ecosystem -->
+                    <image href="data:image/png;base64,{EMBLEM_B64}" 
+                           x="345" y="305" width="110" height="110" 
+                           class="core-emblem" 
+                           style="mix-blend-mode: screen;" />
+                    
+                    <!-- Company name below -->
+                    <text x="400" y="460" class="center-name">Santa Monica</text>
+                    <text x="400" y="485" class="center-subtitle">Strategic Investment Holding</text>
                 </g>
             </svg>
 
@@ -659,10 +732,11 @@
                 </div>
             </section>
 
+            <!-- FOOTER - Full lockup with silver-on-dark elegance -->
             <footer class="site-footer">
                 <div class="footer-grid">
                     <div>
-                        <div class="footer-brand">Santa Monica Group</div>
+                        <img src="data:image/png;base64,{FULL_LOGO_B64}" alt="Santa Monica Group" class="footer-logo-img">
                         <p class="footer-tagline">A strategic investment holding company building long-term value through diversified sector expertise.</p>
                     </div>
                     <div>
@@ -711,8 +785,6 @@
             const branchesG = document.getElementById('branchesG');
             const nodesG = document.getElementById('nodesG');
 
-            // Industries with their representative symbols
-            // Ordered to start from top and go clockwise
             const industries = [
                 { 
                     name: 'Property', 
@@ -797,7 +869,7 @@
                 ring.style.animationDelay = `${6.2 + i * 0.6}s`;
                 scaleG.appendChild(ring);
 
-                // Label - ABOVE the circle
+                // Label
                 const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 label.setAttribute('class', 'node-label');
                 label.setAttribute('y', -nodeRadius - 10);
@@ -805,7 +877,7 @@
                 label.style.animationDelay = `${6.8 + i * 0.6}s`;
                 scaleG.appendChild(label);
 
-                // Industry icon - INSIDE the circle, white fill, scaled up
+                // Industry icon
                 const iconG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                 iconG.setAttribute('transform', 'scale(1.8)');
                 iconG.setAttribute('opacity', '0');
